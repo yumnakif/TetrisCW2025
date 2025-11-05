@@ -7,11 +7,17 @@
     -fx-border-color: whitesmoke;
     -fx-border-radius: 17px;
 }
-
+#scoreLabel {
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-font-family: "Let's go Digital";
+    -fw-background: red;
+    -fx-font-weight: bold;
+}
 .gameBoard {
     -fx-border-color: linear-gradient(#2A5058, #61a2b1);
-    -fx-border-width: 12px;
-    -fx-border-radius: 12px;
+    -fx-border-width: 6px;
+    -fx-border-radius: 0px;
 }
 
 .nextBrickLabel {

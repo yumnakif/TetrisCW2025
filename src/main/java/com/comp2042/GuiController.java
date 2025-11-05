@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -10,6 +11,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -46,6 +49,9 @@ public class GuiController implements Initializable {
     private Rectangle[][] rectangles;
 
     private Timeline timeLine;
+
+    @FXML
+    private Label scoreLabel;
 
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
@@ -115,7 +121,7 @@ public class GuiController implements Initializable {
 
 
         timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400),
+                Duration.millis(300),
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
@@ -132,22 +138,22 @@ public class GuiController implements Initializable {
                 returnPaint = Color.AQUA;
                 break;
             case 2:
-                returnPaint = Color.BLUEVIOLET;
+                returnPaint = Color.FUCHSIA;
                 break;
             case 3:
-                returnPaint = Color.DARKGREEN;
+                returnPaint = Color.CHARTREUSE;
                 break;
             case 4:
-                returnPaint = Color.YELLOW;
+                returnPaint = Color.ORANGERED;
                 break;
             case 5:
                 returnPaint = Color.RED;
                 break;
             case 6:
-                returnPaint = Color.BEIGE;
+                returnPaint = Color.YELLOW;
                 break;
             case 7:
-                returnPaint = Color.BURLYWOOD;
+                returnPaint = Color.DODGERBLUE;
                 break;
             default:
                 returnPaint = Color.WHITE;
@@ -201,6 +207,7 @@ public class GuiController implements Initializable {
     }
 
     public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString("Score: %d"));
     }
 
     public void gameOver() {
@@ -220,6 +227,23 @@ public class GuiController implements Initializable {
     }
 
     public void pauseGame(ActionEvent actionEvent) {
+        System.out.println("paused");
+        if (timeLine == null) return;
+
+        if (!isPause.get()) {
+            timeLine.pause();
+            isPause.set(true);
+            if (actionEvent != null) {
+                ((Button) actionEvent.getSource()).setText("Resume");
+            }
+        } else {
+            timeLine.play();
+            isPause.set(false);
+            if (actionEvent != null) {
+                ((Button) actionEvent.getSource()).setText("Pause");
+            }
+        }
+
         gamePanel.requestFocus();
     }
 }

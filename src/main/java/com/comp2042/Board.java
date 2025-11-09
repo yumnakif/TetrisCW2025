@@ -18,6 +18,8 @@ public interface Board {
 
     void mergeBrickToBackground();
 
+    NextShapeInfo getNextShape();
+
     ClearRow clearRows();
 
     Score getScore();

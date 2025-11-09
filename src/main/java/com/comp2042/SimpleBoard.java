@@ -85,7 +85,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 10);
+        currentOffset = new Point(4, 1);
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
@@ -117,6 +117,13 @@ public class SimpleBoard implements Board {
         return score;
     }
 
+    public NextShapeInfo getNextShape() {
+        Brick nextBrick = brickGenerator.getNextBrick();
+        if (nextBrick == null) {
+            return new NextShapeInfo(new int[][]{{0}}, 0);
+        }
+        return new NextShapeInfo(nextBrick.getShapeMatrix().get(0), 0);
+    }
 
     @Override
     public void newGame() {

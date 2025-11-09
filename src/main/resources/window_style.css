@@ -14,19 +14,49 @@
     -fw-background: red;
     -fx-font-weight: bold;
 }
+.info-box{
+    -fx-border-color: #555;
+    -fx-border-width: 2;
+    -fx-background-color: #222;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-alignment: center;
+}
+.info-title {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+.info-value {
+    -fx-text-fill: #00ffff;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+.pause-btn {
+    -fx-background-color: #002eff;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-border-color: #666;
+    -fx-border-width: 2;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+}
+.pause-btn:hover {
+    -fx-background-color: #555;
+
+}
+.pause-btn:pressed {
+    -fx-background-color: #4f5052;
+}
 .gameBoard {
     -fx-border-color: linear-gradient(#2A5058, #61a2b1);
-    -fx-border-width: 6px;
+    -fx-border-width: 5px;
     -fx-border-radius: 0px;
 }
-
-.nextBrickLabel {
-    -fx-font-family: "Let's go Digital";
-    -fx-padding: 20px 0 0 0;
-    -fx-font-size: 16px;
-    -fx-text-fill: yellow;
-}
-
 .ipad-dark-grey {
     -fx-background-color: linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
     linear-gradient(#020b02, #3a3a3a),

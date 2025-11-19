@@ -15,7 +15,9 @@
                 <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40"/>
             </center>
         </BorderPane>
+
         <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+        <GridPane fx:id="ghostPanel" hgap="1" vgap="1"/>
         <Group fx:id="groupNotification" layoutX="14" layoutY="203">
             <VBox alignment="CENTER">
                 <GameOverPanel fx:id="gameOverPanel"></GameOverPanel>

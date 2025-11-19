@@ -40,6 +40,11 @@ public class GuiController implements Initializable {
     private GridPane brickPanel;
 
     @FXML
+    private GridPane ghostPanel;
+
+    private Rectangle[][] ghostMatrix;
+
+    @FXML
     private GridPane nextBlockPreview;
 
     @FXML
@@ -125,7 +130,16 @@ public class GuiController implements Initializable {
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
-
+        ghostMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];{
+            for (int i = 2; i < ghostMatrix.length; i++) {
+                for (int j = 0; j < ghostMatrix[i].length; j++) {
+                    Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                    rectangle.setFill(Color.TRANSPARENT);
+                    ghostMatrix[i][j] = rectangle;
+                    gamePanel.add(rectangle, j, i - 2);
+                }
+            }
+        }
         timeLine = new Timeline(new KeyFrame(
                 Duration.millis(300),
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
@@ -211,9 +225,66 @@ public class GuiController implements Initializable {
                         rectangles[i][j].setVisible(false);
                     }
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
+
+                }
+            }
+            refreshGhost(brick, eventListener.getBoardMatrix());
+        }
+    }
+    public void refreshGhost(ViewData brick, int[][] ghostBoard) {
+        int ghostY = brick.getyPosition();
+
+        for(int i = 0; i < ghostBoard.length; i++) {
+            for(int j = 0; j < ghostBoard[i].length; j++) {
+                if(ghostMatrix[i][j]!=null){
+                    ghostMatrix[i][j].setVisible(false);
                 }
             }
         }
+        while(ghostY +1 < ghostBoard.length && !collides(ghostBoard, brick.getBrickData(), brick.getxPosition(), ghostY+1) ){
+            ghostY++;
+        }
+        for (int i = 0; i < brick.getBrickData().length; i++) {
+            for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                int cell = brick.getBrickData()[i][j];
+                int boardY = ghostY + i;
+                int boardX = brick.getxPosition() + j;
+
+
+                if (boardY >= 0 && boardY < ghostMatrix.length && boardX >= 0 && boardX < ghostMatrix[0].length) {
+                    Rectangle rectangle = ghostMatrix[boardY][boardX];
+                    if (cell != 0 && ghostBoard[boardY][boardX]==0) {
+                        rectangle.setFill(getFillColor(cell));
+                        rectangle.setOpacity(0.3);
+                        rectangle.setVisible(true);
+                    }
+                }
+            }
+        }
+    }
+    private boolean collides(int[][] board, int[][] brick, int x, int y) {
+        for (int i = 0; i < brick.length; i++) {
+            for (int j = 0; j < brick[i].length; j++) {
+                if (brick[i][j] != 0) {
+                    int boardY = y + i;
+                    int boardX = x + j;
+
+                    // Check out-of-bounds
+                    if (boardY >= board.length || boardX < 0 || boardX >= board[0].length) {
+                        return true;
+                    }
+                    if(boardY<0){
+                        continue;
+                    }
+
+                    // Check collision with existing blocks
+                    if (board[boardY][boardX] != 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void refreshGameBackground(int[][] board) {
@@ -267,6 +338,7 @@ public class GuiController implements Initializable {
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
         updateNextShape(eventListener.getNextShape());
+        ghostPanel.getChildren().clear();
     }
 
     public void pauseGame(ActionEvent actionEvent) {

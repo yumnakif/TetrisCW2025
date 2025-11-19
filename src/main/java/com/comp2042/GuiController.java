@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.comp2042.logic.bricks.BrickShape;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -122,7 +123,7 @@ public class GuiController implements Initializable {
         for (int i = 0; i < brick.getBrickData().length; i++) {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                rectangle.setFill(getFillColor(brick.getBrickData()[i][j]));
+                rectangle.setVisible(false);
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);
             }
@@ -148,40 +149,6 @@ public class GuiController implements Initializable {
         timeLine.play();
     }
 
-    private Paint getFillColor(int i) {
-        Paint returnPaint;
-        switch (i) {
-            case 0:
-                returnPaint = Color.BLACK;
-                break;
-            case 1:
-                returnPaint = Color.AQUA;
-                break;
-            case 2:
-                returnPaint = Color.FUCHSIA;
-                break;
-            case 3:
-                returnPaint = Color.CHARTREUSE;
-                break;
-            case 4:
-                returnPaint = Color.DEEPPINK;
-                break;
-            case 5:
-                returnPaint = Color.RED;
-                break;
-            case 6:
-                returnPaint = Color.YELLOW;
-                break;
-            case 7:
-                returnPaint = Color.ROYALBLUE;
-                break;
-            default:
-                returnPaint = Color.WHITE;
-                break;
-        }
-        return returnPaint;
-    }
-
     public void  updateNextShape(NextShapeInfo nextShapeInfo){
         if(nextBlockPreview == null) {
             nextBlockPreview.getChildren().clear();
@@ -190,6 +157,7 @@ public class GuiController implements Initializable {
         nextBlockPreview.getChildren().clear();
 
        int[][] nextShape = nextShapeInfo.getShape();
+       Color brickColor= nextShapeInfo.getBrick().getColor();
 
         int offsetX = Math.max(0, (BRICK_SIZE - nextShape[0].length) / 2);
         int offsetY = Math.max(0, (BRICK_SIZE - nextShape.length) / 2);
@@ -199,9 +167,7 @@ public class GuiController implements Initializable {
                int cell = nextShape[i][j];
                if (cell != 0) {
                    Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                   rectangle.setFill(getFillColor(cell));
-                   rectangle.setArcHeight(5);
-                   rectangle.setArcWidth(5);
+                   setRectangleData(brickColor,rectangle);
                    nextBlockPreview.add(rectangle, j + offsetX, i + offsetY);
                }
            }
@@ -213,18 +179,18 @@ public class GuiController implements Initializable {
         if (isPause.getValue() == Boolean.FALSE) {
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
-
+            Color brickColor = brick.getBrick().getColor();
 
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     int cell = brick.getBrickData()[i][j];
                     if (cell != 0) {
-                        setRectangleData(cell, rectangles[i][j]);
+                        setRectangleData(brickColor, rectangles[i][j]);
                         rectangles[i][j].setVisible(true);
                     }else {
                         rectangles[i][j].setVisible(false);
                     }
-                    setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
+                    setRectangleData(brickColor, rectangles[i][j]);
 
                 }
             }
@@ -233,7 +199,7 @@ public class GuiController implements Initializable {
     }
     public void refreshGhost(ViewData brick, int[][] ghostBoard) {
         int ghostY = brick.getyPosition();
-
+        Color brickColor= brick.getBrick().getColor();
         for(int i = 0; i < ghostBoard.length; i++) {
             for(int j = 0; j < ghostBoard[i].length; j++) {
                 if(ghostMatrix[i][j]!=null){
@@ -254,7 +220,7 @@ public class GuiController implements Initializable {
                 if (boardY >= 0 && boardY < ghostMatrix.length && boardX >= 0 && boardX < ghostMatrix[0].length) {
                     Rectangle rectangle = ghostMatrix[boardY][boardX];
                     if (cell != 0 && ghostBoard[boardY][boardX]==0) {
-                        rectangle.setFill(getFillColor(cell));
+                        setRectangleData(brickColor,rectangle);
                         rectangle.setOpacity(0.3);
                         rectangle.setVisible(true);
                     }
@@ -290,13 +256,15 @@ public class GuiController implements Initializable {
     public void refreshGameBackground(int[][] board) {
         for (int i = 2; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                setRectangleData(board[i][j], displayMatrix[i][j]);
+                int colorInt = board[i][j];
+                Color color= BrickShape.getColorInt(colorInt);
+                setRectangleData(color, displayMatrix[i][j]);
             }
         }
     }
 
-    private void setRectangleData(int color, Rectangle rectangle) {
-        rectangle.setFill(getFillColor(color));
+    private void setRectangleData(Color color, Rectangle rectangle) {
+        rectangle.setFill(color);
         rectangle.setArcHeight(5);
         rectangle.setArcWidth(5);
     }

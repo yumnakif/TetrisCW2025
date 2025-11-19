@@ -20,7 +20,7 @@ public class MenuScreen {
 
 
         titleView.setPreserveRatio(true);
-        titleView.setFitWidth(550);
+        titleView.setFitWidth(600);
 
         Button startButton = new Button("Start Game");
         Button exitButton = new Button("Exit");
@@ -28,13 +28,14 @@ public class MenuScreen {
         VBox layout = new VBox(20, titleView, startButton, exitButton);
         layout.setAlignment(Pos.CENTER);
 
-        Scene menuScene =new Scene(layout,448,657);
+        Scene menuScene =new Scene(layout,600,657);
         menuScene.getStylesheets().add(getClass().getResource("/menu_style.css").toExternalForm());
 
         startButton.setOnAction(e->startGame());
         exitButton.setOnAction((e-> stage.close()));
 
         stage.setScene((menuScene));
+        stage.setResizable(false);
         stage.show();
 
     }

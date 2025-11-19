@@ -12,5 +12,7 @@ public interface InputEventListener {
 
     NextShapeInfo getNextShape();
 
+    int[][] getBoardMatrix();
+
     void createNewGame();
 }

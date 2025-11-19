@@ -2,7 +2,7 @@ package com.comp2042;
 
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10);
+    private Board board = new SimpleBoard(33, 21);
 
     private final GuiController viewGuiController;
 
@@ -12,6 +12,8 @@ public class GameController implements InputEventListener {
         viewGuiController.setEventListener(this);
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
+
+        viewGuiController.updateNextShape(board.getNextShape());
     }
 
     @Override
@@ -28,6 +30,7 @@ public class GameController implements InputEventListener {
                 viewGuiController.gameOver();
             }
 
+            viewGuiController.updateNextShape(board.getNextShape());
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
         } else {
@@ -35,6 +38,7 @@ public class GameController implements InputEventListener {
                 board.getScore().add(1);
             }
         }
+
         return new DownData(clearRow, board.getViewData());
     }
 
@@ -52,10 +56,19 @@ public class GameController implements InputEventListener {
 
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
+        board.rotateBrick();
         return board.getViewData();
     }
 
+    @Override
+    public NextShapeInfo getNextShape(){
+        return board.getNextShape();
+}
+
+    @Override
+    public int[][] getBoardMatrix(){
+        return board.getBoardMatrix();
+    }
 
     @Override
     public void createNewGame() {

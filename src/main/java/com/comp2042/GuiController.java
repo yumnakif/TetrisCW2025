@@ -67,6 +67,14 @@ public class GuiController implements Initializable {
     @FXML
     private Label scoreLabel;
 
+    @FXML
+    private Label stopwatchLabel;
+
+    private Stopwatch stopwatch;
+
+    @FXML
+    private Label linesRemovedLabel;
+
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
@@ -129,6 +137,9 @@ public class GuiController implements Initializable {
         reflection.setFraction(0.8);
         reflection.setTopOpacity(0.9);
         reflection.setTopOffset(-12);
+
+        stopwatch=new Stopwatch();
+        stopwatch.bindtoLabel(stopwatchLabel);
     }
 
     public void initGameView(int[][] boardMatrix, ViewData brick) {
@@ -336,6 +347,7 @@ public class GuiController implements Initializable {
             if (actionEvent != null) {
                 ((Button) actionEvent.getSource()).setText("Resume");
             }
+            stopwatch.stop();
         }
 
         gamePanel.requestFocus();
@@ -386,12 +398,16 @@ public class GuiController implements Initializable {
     }
     public void gameOver() {
         isGameOver.setValue(Boolean.TRUE);
+        timeLine.stop();
+        stopwatch.stop();
+        gameOverPanel.show();
     }
 
     public void newGame(ActionEvent actionEvent) {
         timeLine.stop();
         eventListener.createNewGame();
         gamePanel.requestFocus();
+        stopwatch.restart();
         timeLine.play();
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);

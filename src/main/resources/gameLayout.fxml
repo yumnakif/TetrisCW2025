@@ -27,6 +27,10 @@
     <right>
         <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 7;">
 
+            <VBox alignment="CENTER" spacing="10" styleClass="info-box">
+                <Label text="Time" styleClass="info-title"/>
+                <Label fx:id="stopwatchLabel" styleClass="info-value"/>
+            </VBox>
             <VBox alignment="CENTER" spacing="20" styleClass="info-box" prefHeight="160" prefWidth="140">
                 <Label text="NEXT" styleClass="info-title"/>
                 <GridPane fx:id="nextBlockPreview" hgap="2" vgap="2" minHeight="100" minWidth="100"/>

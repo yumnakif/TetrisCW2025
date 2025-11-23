@@ -4,7 +4,7 @@
 
 .nextBrick {
     -fx-border-width: 2px;
-    -fx-border-color: whitesmoke;
+    -fx-border-color: whitespace;
     -fx-border-radius: 17px;
 }
 #scoreLabel {
@@ -36,17 +36,17 @@
 }
 
 .pause-btn {
-    -fx-background-color: #002eff;
+    -fx-background-color: #7904bd;
     -fx-text-fill: white;
     -fx-font-size: 14;
     -fx-font-weight: bold;
-    -fx-border-color: #666;
+    -fx-border-color: #7904bd;
     -fx-border-width: 2;
-    -fx-background-radius: 4;
+    -fx-background-radius: 3;
     -fx-border-radius: 4;
 }
 .pause-btn:hover {
-    -fx-background-color: #555;
+    -fx-background-color:#9566b0;
 
 }
 .pause-btn:pressed {

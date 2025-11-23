@@ -10,9 +10,19 @@ import javafx.scene.image.ImageView;
 
 public class MenuScreen {
     private final Stage stage;
+    private Runnable onStartGame;
+    private Runnable onExit;
 
     public MenuScreen(Stage stage){
         this.stage=stage;
+    }
+
+    public void setOnStartGame(Runnable onStartGame) {
+        this.onStartGame = onStartGame;
+    }
+
+    public void setOnExit(Runnable onExit) {
+        this.onExit = onExit;
     }
     public void show(){
         Image titleImage= new Image(getClass().getResource("/TETRIS_title.png").toExternalForm());
@@ -31,20 +41,20 @@ public class MenuScreen {
         Scene menuScene =new Scene(layout,600,657);
         menuScene.getStylesheets().add(getClass().getResource("/menu_style.css").toExternalForm());
 
-        startButton.setOnAction(e->startGame());
-        exitButton.setOnAction((e-> stage.close()));
+        startButton.setOnAction(e -> {
+            if (onStartGame != null) onStartGame.run();
+        });
+
+        exitButton.setOnAction(e -> {
+            if (onExit != null) onExit.run();
+        });
 
         stage.setScene((menuScene));
         stage.setResizable(false);
         stage.show();
 
     }
-
-    private void startGame() {
-        try {
-            Main.loadGameScene(stage);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    public void returntoMenu(){
+        show();
     }
 }

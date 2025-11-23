@@ -12,30 +12,39 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Main extends Application {
+    private MenuScreen menuScreen;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         URL location = getClass().getClassLoader().getResource("gameLayout.fxml");
         ResourceBundle resources = null;
-        MenuScreen menu= new MenuScreen(primaryStage);
-        menu.show();
+        menuScreen=new MenuScreen(primaryStage);
+        menuScreen.setOnStartGame(()-> loadGameScene(primaryStage));
+        menuScreen.setOnExit(primaryStage::close);
+        menuScreen.show();
         Image logo=new Image("Logo2.png");
         primaryStage.getIcons().add(logo);
     }
 
-    public static void loadGameScene(Stage primaryStage) throws Exception{
-        URL location = Main.class.getClassLoader().getResource("gameLayout.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(location);
-        Parent root = fxmlLoader.load();
-        GuiController c = fxmlLoader.getController();
+    public void loadGameScene(Stage primaryStage){
+        try{
+            URL location = Main.class.getClassLoader().getResource("gameLayout.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(location);
+            Parent root = fxmlLoader.load();
+            GuiController c = fxmlLoader.getController();
+            GuiController.setMenuScreen(menuScreen);
 
-        primaryStage.setTitle("TetrisJFX");
-        Scene scene = new Scene(root, 600, 657);
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
-        new GameController(c);
+            Scene scene = new Scene(root, 600, 657);
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.setTitle("TetrisJFX");
+            primaryStage.show();
+            new GameController(c);
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

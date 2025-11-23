@@ -15,4 +15,6 @@ public interface InputEventListener {
     int[][] getBoardMatrix();
 
     void createNewGame();
+
+    ViewData onHardDropEvent(MoveEvent moveEvent);
 }

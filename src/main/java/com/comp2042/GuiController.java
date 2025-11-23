@@ -94,7 +94,10 @@ public class GuiController implements Initializable {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
-                }
+                    if(keyEvent.getCode()==KeyCode.ENTER){
+                        hardDrop();
+                        keyEvent.consume();
+                    }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
                 }
@@ -252,7 +255,13 @@ public class GuiController implements Initializable {
         }
         return false;
     }
-
+    public void hardDrop(){
+        if(isPause.getValue()==Boolean.FALSE && isGameOver.getValue()==Boolean.FALSE){
+            ViewData result=eventListener.onHardDropEvent(new MoveEvent(EventType.HARD_DROP,EventSource.USER));
+            refreshBrick(result);
+            moveDown(new MoveEvent(EventType.DOWN,EventSource.USER));
+        }
+    }
     public void refreshGameBackground(int[][] board) {
         for (int i = 2; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {

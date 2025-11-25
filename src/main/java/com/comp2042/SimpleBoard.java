@@ -94,7 +94,7 @@ public class SimpleBoard implements Board {
     @Override
     public boolean createNewBrick() {
         currentBrick = brickGenerator.getBrick();
-        currentOffset = new Point(4, 0);
+        currentOffset = new Point(4, 1);
         return MatrixOperations.intersect(currentGameMatrix, currentBrick.getCurrentMatrix(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 

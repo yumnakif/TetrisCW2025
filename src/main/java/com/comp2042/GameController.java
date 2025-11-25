@@ -3,16 +3,17 @@ package com.comp2042;
 public class GameController implements InputEventListener {
 
     private Board board = new SimpleBoard(33, 20);
-
     private final GuiController viewGuiController;
 
     public GameController(GuiController c) {
         viewGuiController = c;
         board.createNewBrick();
         viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
+        viewGuiController.initInputHandler();
+        viewGuiController.getRenderer().initGameView(board.getBoardMatrix());
+        viewGuiController.getRenderer().initBrick(board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
-        viewGuiController.updateNextShape(board.getNextShape());
+        viewGuiController.getRenderer().updateNextShape(board.getNextShape());
         viewGuiController.newGame(null);
     }
 
@@ -29,9 +30,8 @@ public class GameController implements InputEventListener {
             if (board.createNewBrick()) {
                 viewGuiController.gameOver();
             }
-
-            viewGuiController.updateNextShape(board.getNextShape());
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+            viewGuiController.getRenderer().updateNextShape(board.getNextShape());
+            viewGuiController.getRenderer().refreshBackground(board.getBoardMatrix());
 
         } else {
             clearRow=new ClearRow(0,board.getBoardMatrix(),0);
@@ -39,26 +39,31 @@ public class GameController implements InputEventListener {
                 board.getScore().add(1);
             }
         }
-
         return new DownData(clearRow, board.getViewData());
     }
 
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
         board.moveBrickLeft();
-        return board.getViewData();
+        ViewData viewData=board.getViewData();
+        viewGuiController.brickRender(viewData);
+        return viewData;
     }
 
     @Override
     public ViewData onRightEvent(MoveEvent event) {
         board.moveBrickRight();
-        return board.getViewData();
+        ViewData viewData=board.getViewData();
+        viewGuiController.brickRender(viewData);
+        return viewData;
     }
 
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
         board.rotateBrick();
-        return board.getViewData();
+        ViewData viewData=board.getViewData();
+        viewGuiController.brickRender(viewData);
+        return viewData;
     }
 
     @Override
@@ -75,13 +80,14 @@ public class GameController implements InputEventListener {
         if (clearRow.getLinesRemoved()>0){
             board.getScore().add(clearRow.getScoreBonus());
         }
+        viewGuiController.getRenderer().refreshBackground(board.getBoardMatrix());
         if (board.createNewBrick()) {
             viewGuiController.gameOver();
         }
-        viewGuiController.updateNextShape(board.getNextShape());
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
-
-        return board.getViewData();
+        viewGuiController.getRenderer().updateNextShape(board.getNextShape());
+        ViewData viewData=board.getViewData();
+        viewGuiController.brickRender(viewData);
+        return viewData;
     }
 
     @Override
@@ -97,6 +103,10 @@ public class GameController implements InputEventListener {
     @Override
     public void createNewGame() {
         board.newGame();
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        viewGuiController.getRenderer().clearBoard();
+        viewGuiController.getRenderer().initGameView(board.getBoardMatrix());
+        viewGuiController.getRenderer().initBrick(board.getViewData());
+        viewGuiController.getRenderer().updateNextShape(board.getNextShape());
+
     }
 }

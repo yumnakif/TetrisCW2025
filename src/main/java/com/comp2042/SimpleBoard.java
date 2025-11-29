@@ -67,7 +67,6 @@ public class SimpleBoard implements Board {
             return true;
         }
     }
-
     private boolean moveBrick(int x, int y){
         Point p=new Point(currentOffset);
         p.translate(x,y);

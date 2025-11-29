@@ -50,9 +50,13 @@ public class GuiController implements Initializable {
     @FXML
     private Label linesRemovedLabel;
     @FXML
+    private Label levelLabel;
+    @FXML
     private Button pauseButton;
     @FXML
     private StackPane stackroot;
+    @FXML
+    private Label highScoreLabel;
 
     private Timeline timeLine;
 
@@ -138,8 +142,14 @@ public class GuiController implements Initializable {
     }
     public void hardDrop(){
         if(isPause.getValue()==Boolean.FALSE && isGameOver.getValue()==Boolean.FALSE){
-            ViewData result=eventListener.onHardDropEvent(new MoveEvent(EventType.HARD_DROP,EventSource.USER));
-            brickRender(result);
+            DownData result=eventListener.onHardDropEvent(new MoveEvent(EventType.HARD_DROP,EventSource.USER));
+            if (result.getClearRow() != null && result.getClearRow().getLinesRemoved() > 0) {
+                NotificationPanel notificationPanel = new NotificationPanel("+" + result.getClearRow().getScoreBonus());
+                groupNotification.getChildren().add(notificationPanel);
+                notificationPanel.showScore(groupNotification.getChildren());
+            }
+            brickRender(result.getViewData());
+
         }
     }
     private void moveDown(MoveEvent event) {
@@ -164,6 +174,9 @@ public class GuiController implements Initializable {
 
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("%d"));
+        integerProperty.addListener((obs, oldVal, newVal) -> {
+            state.getScore().add(newVal.intValue() - oldVal.intValue());
+        });
     }
     public void bindLinesRemoved(IntegerProperty linesProperty){
         linesRemovedLabel.textProperty().bind(linesProperty.asString("%d"));

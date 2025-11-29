@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 
 public class GameOverPanel {
 
@@ -16,6 +17,8 @@ public class GameOverPanel {
     private final Button mainmenuButton;
     private Runnable onNewGame;
     private Runnable onMainMenu;
+    private final Label scoreLabel;
+    private Score score;
 
     public GameOverPanel() {
 
@@ -24,12 +27,18 @@ public class GameOverPanel {
 
         Label title = new Label("GAME OVER");
         title.getStyleClass().add("gameOverStyle");
+        scoreLabel=new Label();
+        scoreLabel.getStyleClass().add("score-display");
+        scoreLabel.setTextAlignment(TextAlignment.CENTER);
+        scoreLabel.setWrapText(true);
 
         newgameButton = new Button("New Game");
         newgameButton.getStyleClass().add("button");
+
         mainmenuButton = new Button("Main Menu");
         mainmenuButton.getStyleClass().add("button");
-        menuBox = new VBox(20, title, newgameButton, mainmenuButton);
+
+        menuBox = new VBox(20, title, scoreLabel, newgameButton, mainmenuButton);
         menuBox.setAlignment(Pos.CENTER);
         menuBox.getStyleClass().add("pause-menu");
 
@@ -53,6 +62,10 @@ public class GameOverPanel {
         });
     }
 
+    public void setScore(Score score){
+        this.score=score;
+        scoreLabel.textProperty().bind(score.gameOverTextProperty());
+    }
     public void setOnNewGame(Runnable newgame) {
         this.onNewGame = newgame;
     }
@@ -60,6 +73,9 @@ public class GameOverPanel {
         this.onMainMenu = mainmenu;
     }
     public void show() {
+        if(score!=null){
+            score.setGameOverMessage();
+        }
         overlay.setVisible(true);
     }
     public void hide() {

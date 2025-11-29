@@ -1,6 +1,7 @@
 package com.comp2042;
 
 import com.comp2042.logic.bricks.BrickShape;
+import com.comp2042.logic.levels.Level;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -18,19 +19,20 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
-
     @FXML
     private GridPane gamePanel;
     @FXML
@@ -62,19 +64,17 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
-    private PausePanel pauseOverlay;
-
     private static MenuScreen menuScreen;
-
-    private boolean downDrop=false;
 
     private GameRender renderer;
     private InputHandler inputHandler;
     private GameState state;
 
+    Rectangle fogOverlay;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         renderer=new GameRender(gamePanel,brickPanel,ghostPanel);
         renderer.setNextBlockPreview(nextBlockPreview);
         state=new GameState(stackroot);
@@ -86,6 +86,17 @@ public class GuiController implements Initializable {
         state.pauseMainMenu(this::returntoMainMenu);
         state.gameOverRestart(this::restartGame);
         state.gameOverMainMenu(()->menuScreen.returntoMenu());
+
+        fogOverlay=new Rectangle();
+        fogOverlay.setVisible(false);
+        fogOverlay.setMouseTransparent(true);
+        fogOverlay.setFill(Color.rgb(58,58,58,0.83));
+        Pane gamePanelParent = (Pane) gamePanel.getParent();
+        fogOverlay.widthProperty().bind(gamePanelParent.widthProperty());
+        fogOverlay.heightProperty().bind(gamePanelParent.heightProperty());
+        stackroot.getChildren().add(1,fogOverlay);
+
+        highScoreLabel.textProperty().bind(state.getScore().highScoreProperty().asString("%d"));
 
         setupTimeline();
     }
@@ -99,10 +110,21 @@ public class GuiController implements Initializable {
                 ae -> {
                     moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
                 }
-
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
+    }
+
+    public void updateTimelineSpeed(int newSpeed){
+        if(timeLine!=null){
+            timeLine.stop();
+        }
+        timeLine=new Timeline(new KeyFrame(Duration.millis(newSpeed), se->{
+            moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+        }));
+        timeLine.setCycleCount(Timeline.INDEFINITE);
+        timeLine.play();
+
     }
     public GameRender getRenderer(){
         return renderer;
@@ -146,6 +168,9 @@ public class GuiController implements Initializable {
     public void bindLinesRemoved(IntegerProperty linesProperty){
         linesRemovedLabel.textProperty().bind(linesProperty.asString("%d"));
     }
+    public void bindLevel(IntegerProperty levelProperty){
+        levelLabel.textProperty().bind(levelProperty.asString("%d"));
+    }
     public void pauseGame(ActionEvent actionEvent) {
         state.pauseToggle(pauseButton);
         if (state.isPaused()) {
@@ -173,7 +198,8 @@ public class GuiController implements Initializable {
         isPause.set(false);
         isGameOver.setValue(Boolean.FALSE);
         pauseButton.setText("Pause");
-
+        fogOverlay.setVisible(false);
+        state.resetScore();
         renderer.clearBoard();
         newGame(null);
 
@@ -194,9 +220,14 @@ public class GuiController implements Initializable {
         stopwatch.stop();
         state.showGameOver();
     }
+
+    public void applyfog(boolean hasFog){
+        fogOverlay.setVisible(hasFog);
+    }
     private void handleNewGame(){
         newGame(null);
     }
+
     public void newGame(ActionEvent actionEvent) {
         if(timeLine!=null){timeLine.stop();}
         eventListener.createNewGame();

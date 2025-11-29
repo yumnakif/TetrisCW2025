@@ -8,8 +8,8 @@
     -fx-border-radius: 17px;
 }
 #scoreLabel {
-    -fx-font-size: 20px;
-    -fx-text-fill: white;
+    -fx-font-size: 38px;
+    -fx-text-fill: #00ffff;
     -fx-font-family: "Let's go Digital";
     -fw-background: red;
     -fx-font-weight: bold;
@@ -90,19 +90,13 @@
 }
 
 .bonusStyle {
-    -fx-font-size: 40px;
-    -fx-font-weight: bold;
+    -fx-font-size: 60px;
+    -fx-font-weight: bolder;
 }
 
 .gameOverStyle {
     -fx-font-family: "Let's go Digital";
-    -fx-font-size: 48;
+    -fx-font-size: 50px;
     -fx-background-color: red;
-}
-
-.scoreClass{
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 38;
-    -fx-fill: yellow;
-    -fx-text-fill: yellow;
+    -fx-font-fill: #000000;
 }

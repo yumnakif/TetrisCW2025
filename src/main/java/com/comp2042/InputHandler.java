@@ -17,7 +17,6 @@ public class InputHandler {
         this.newGame = newGame;
     }
 
-
     public void handle(KeyEvent keyEvent, boolean isPause, boolean isGameOver) {
         if (!isPause && !isGameOver) {
             if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
@@ -30,10 +29,6 @@ public class InputHandler {
             }
             if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
                 eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER));
-                keyEvent.consume();
-            }
-            if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
-                eventListener.onDownEvent(new MoveEvent(EventType.DOWN, EventSource.USER));
                 keyEvent.consume();
             }
             if (keyEvent.getCode() == KeyCode.ENTER) {

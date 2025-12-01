@@ -1,7 +1,6 @@
 package com.comp2042;
 
 import com.comp2042.logic.bricks.BrickShape;
-import com.comp2042.logic.levels.Level;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -19,20 +18,19 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
+
     @FXML
     private GridPane gamePanel;
     @FXML
@@ -60,6 +58,10 @@ public class GuiController implements Initializable {
 
     private Timeline timeLine;
 
+    private Timeline downTimeline;
+
+    private boolean downKeyPressed;
+
     private InputEventListener eventListener;
 
     private Stopwatch stopwatch;
@@ -68,7 +70,11 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
+    private PausePanel pauseOverlay;
+
     private static MenuScreen menuScreen;
+
+    private boolean downDrop=false;
 
     private GameRender renderer;
     private InputHandler inputHandler;
@@ -91,33 +97,53 @@ public class GuiController implements Initializable {
         state.gameOverRestart(this::restartGame);
         state.gameOverMainMenu(()->menuScreen.returntoMenu());
 
-        fogOverlay=new Rectangle();
-        fogOverlay.setVisible(false);
-        fogOverlay.setMouseTransparent(true);
-        fogOverlay.setFill(Color.rgb(58,58,58,0.83));
-        Pane gamePanelParent = (Pane) gamePanel.getParent();
-        fogOverlay.widthProperty().bind(gamePanelParent.widthProperty());
-        fogOverlay.heightProperty().bind(gamePanelParent.heightProperty());
-        stackroot.getChildren().add(1,fogOverlay);
-
-        highScoreLabel.textProperty().bind(state.getScore().highScoreProperty().asString("%d"));
-
         setupTimeline();
-    }
-    public void initInputHandler(){
-        inputHandler=new InputHandler(eventListener,this::hardDrop, this::handleNewGame);
-        gamePanel.setOnKeyPressed(e->inputHandler.handle(e,isPause.get(),isGameOver.get()));
     }
 
     private void setupTimeline(){
         timeLine = new Timeline(new KeyFrame(Duration.millis(300),
                 ae -> {
-                    moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                    if(!downKeyPressed){
+                        moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                    }
                 }
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
+
+        downTimeline=new Timeline(new KeyFrame(Duration.millis(50),
+                ae-> {
+                        if(downKeyPressed) {
+                            moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
+                        }else{
+                            downTimeline.stop();
+                        }
+        }
+        ));
+        downTimeline.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
+
+    public void initInputHandler(){
+        inputHandler=new InputHandler(eventListener,this::hardDrop, this::handleNewGame);
+        gamePanel.setOnKeyPressed(e->{
+                if(!isPause.get()&& !isGameOver.get()){
+                    if(e.getCode()==KeyCode.DOWN || e.getCode()==KeyCode.S){
+                        downKeyPressed=true;
+                        downTimeline.play();
+                    }
+                    else{
+                        inputHandler.handle(e,isPause.get(),isGameOver.get());
+                    }
+                }
+        });
+        gamePanel.setOnKeyReleased(e->{
+            if(e.getCode()==KeyCode.DOWN || e.getCode()==KeyCode.S){
+                downKeyPressed=false;
+                downTimeline.stop();
+            }
+        });
+    }
+
 
     public void updateTimelineSpeed(int newSpeed){
         if(timeLine!=null){
@@ -188,6 +214,8 @@ public class GuiController implements Initializable {
         state.pauseToggle(pauseButton);
         if (state.isPaused()) {
             timeLine.pause();
+            downTimeline.stop();
+            downKeyPressed = false;
             isPause.set(true);
             stopwatch.stop();
         }
@@ -205,6 +233,7 @@ public class GuiController implements Initializable {
     public void restartGame(){
         if(timeLine!=null){
             timeLine.stop();
+            downTimeline.stop();
         }
         state.hidePause();
         state.hideGameOver();

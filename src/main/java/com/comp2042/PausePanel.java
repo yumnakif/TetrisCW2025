@@ -14,7 +14,6 @@ public class PausePanel {
     private final Button restartButton;
     private final Button mainMenuButton;
 
-    //private Timeline gametimeline;
     private Runnable onRestart;
     private Runnable isMainMenu;
 
@@ -86,7 +85,6 @@ public class PausePanel {
         return pauseOverlay.isVisible();
     }
 
-    // Get the root node for adding to scene graph
     public StackPane getOverlay() {
         return pauseOverlay;
     }

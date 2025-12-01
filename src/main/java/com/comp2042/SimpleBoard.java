@@ -12,9 +12,9 @@ public class SimpleBoard implements Board {
     private final int width;
     private final int height;
     private final BrickGenerator brickGenerator;
-    private Brick currentBrick;
+    Brick currentBrick;
     private int[][] currentGameMatrix;
-    private Point currentOffset;
+    Point currentOffset;
     private final Score score;
 
     public SimpleBoard(int width, int height) {
@@ -68,16 +68,6 @@ public class SimpleBoard implements Board {
         }
     }
 
-    private boolean moveBrick(int x, int y){
-        Point p=new Point(currentOffset);
-        p.translate(x,y);
-        boolean intersect=MatrixOperations.intersect(currentGameMatrix,currentBrick.getCurrentMatrix(),(int) p.getX(),(int)p.getY());
-        if(intersect){
-            return false;
-        }
-        currentOffset=p;
-        return true;
-    }
     @Override
     public boolean rotateBrick() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -118,7 +108,6 @@ public class SimpleBoard implements Board {
         ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
         currentGameMatrix = clearRow.getNewMatrix();
         return clearRow;
-
     }
 
     @Override

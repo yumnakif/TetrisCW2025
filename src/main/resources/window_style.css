@@ -30,7 +30,7 @@
     -fx-border-color: #555;
     -fx-border-width: 2;
     -fx-background-color: linear-gradient(to bottom,#333333 0%, #222222 100%);
-    -fx-padding: 10;
+    -fx-padding: 10 10;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
     -fx-alignment: center;

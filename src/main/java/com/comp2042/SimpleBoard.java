@@ -67,7 +67,6 @@ public class SimpleBoard implements Board {
             return true;
         }
     }
-
     private boolean moveBrick(int x, int y){
         Point p=new Point(currentOffset);
         p.translate(x,y);
@@ -94,7 +93,7 @@ public class SimpleBoard implements Board {
     @Override
     public boolean createNewBrick() {
         currentBrick = brickGenerator.getBrick();
-        currentOffset = new Point(4, 0);
+        currentOffset = new Point(4, 1);
         return MatrixOperations.intersect(currentGameMatrix, currentBrick.getCurrentMatrix(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 

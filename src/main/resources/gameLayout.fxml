@@ -25,26 +25,29 @@
     </StackPane>
 </center>
     <right>
-        <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 7;">
+        <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 7;">
 
             <VBox alignment="CENTER" spacing="10" styleClass="info-box">
                 <Label text="Time" styleClass="info-title"/>
                 <Label fx:id="stopwatchLabel" styleClass="info-value"/>
             </VBox>
-            <VBox alignment="CENTER" spacing="20" styleClass="info-box" prefHeight="160" prefWidth="140">
+            <VBox alignment="CENTER" spacing="20" styleClass="info-box" prefHeight="130" prefWidth="140">
                 <Label text="NEXT" styleClass="info-title"/>
-                <GridPane fx:id="nextBlockPreview" hgap="2" vgap="2" minHeight="100" minWidth="100"/>
+                <GridPane fx:id="nextBlockPreview" hgap="2" vgap="2" minHeight="70" minWidth="100"/>
             </VBox>
             <VBox alignment="CENTER" spacing="10" styleClass="info-box">
                 <Label text="Score" styleClass="info-title" />
                 <Label fx:id="scoreLabel" text="0" styleClass="info-value" />
             </VBox>
-
             <VBox alignment="CENTER" spacing="10" styleClass="info-box">
+                <Label text="High Score" styleClass="info-title" />
+                <Label fx:id="highScoreLabel" text="0" styleClass="info-value" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="8" styleClass="info-box">
                 <Label text="LEVEL" styleClass="info-title" />
                 <Label fx:id="levelLabel" text="1" styleClass="info-value"/>
             </VBox>
-            <VBox alignment="CENTER" spacing="10" styleClass="info-box">
+            <VBox alignment="CENTER" spacing="8" styleClass="info-box">
                 <Label text="Lines:" styleClass="info-title" />
                 <Label fx:id="linesRemovedLabel" text="0" styleClass="info-value" />
             </VBox>

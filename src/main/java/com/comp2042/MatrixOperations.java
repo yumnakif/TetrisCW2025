@@ -1,9 +1,6 @@
 package com.comp2042;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MatrixOperations {
@@ -17,10 +14,13 @@ public class MatrixOperations {
     public static boolean intersect(final int[][] matrix, final int[][] brick, int x, int y) {
         for (int i = 0; i < brick.length; i++) {
             for (int j = 0; j < brick[i].length; j++) {
-                int targetX = x + i;
-                int targetY = y + j;
-                if (brick[j][i] != 0 && (checkOutOfBound(matrix, targetX, targetY) || matrix[targetY][targetX] != 0)) {
-                    return true;
+                int targetX = x + j;
+                int targetY = y + i;
+                if (brick[i][j] != 0) {
+                    boolean outOfBound=checkOutOfBound(matrix,targetX,targetY);
+                    if(outOfBound|| (!outOfBound && matrix[targetY][targetX]!=0)){
+                        return true;
+                    }
                 }
             }
         }
@@ -28,12 +28,15 @@ public class MatrixOperations {
     }
 
     private static boolean checkOutOfBound(int[][] matrix, int targetX, int targetY) {
-        boolean returnValue = true;
-        if (targetX >= 0 && targetY < matrix.length && targetX < matrix[targetY].length) {
-            returnValue = false;
+
+        if(targetY<0 || targetY>= matrix.length){
+            return true;
         }
-        return returnValue;
-    }
+        if(targetX<0||targetX>=matrix[targetY].length){
+            return true;
+        }
+        return false;
+        }
 
     public static int[][] copy(int[][] original) {
         int[][] myInt = new int[original.length][];
@@ -50,10 +53,10 @@ public class MatrixOperations {
         int[][] copy = copy(filledFields);
         for (int i = 0; i < brick.length; i++) {
             for (int j = 0; j < brick[i].length; j++) {
-                int targetX = x + i;
-                int targetY = y + j;
-                if (brick[j][i] != 0) {
-                    copy[targetY][targetX] = brick[j][i];
+                int targetX = x + j;
+                int targetY = y + i;
+                if (brick[i][j] != 0) {
+                    copy[targetY][targetX] = brick[i][j];
                 }
             }
         }
@@ -81,11 +84,11 @@ public class MatrixOperations {
             }
         }
         for (int i = matrix.length - 1; i >= 0; i--) {
-            int[] row = newRows.pollLast();
-            if (row != null) {
-                tmp[i] = row;
-            } else {
-                break;
+            if (!newRows.isEmpty()){
+                tmp[i]= newRows.pollLast();
+            }else{
+                tmp[i]=new int[matrix[0].length];
+                Arrays.fill(tmp[i],0);
             }
         }
         int scoreBonus = 50 * clearedRows.size() * clearedRows.size();

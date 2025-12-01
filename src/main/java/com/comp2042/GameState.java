@@ -7,18 +7,24 @@ public class GameState {
     private final PausePanel pausePanel;
     private final GameOverPanel gameoverPanel;
     private boolean isPause=false;
+    private Score score;
 
     public GameState(StackPane rootStackPane){
         pausePanel=new PausePanel();
         gameoverPanel=new GameOverPanel();
+        score=new Score();
 
         rootStackPane.getChildren().addAll(pausePanel.getOverlay(),gameoverPanel.getOverlay());
         pausePanel.bindSizeTo(rootStackPane);
         gameoverPanel.bindSizeTo(rootStackPane);
+        gameoverPanel.setScore(score);
         pausePanel.hide();
         gameoverPanel.hide();
     }
 
+    public Score getScore(){
+        return score;
+    }
     public void pauseRestart(Runnable run){
         pausePanel.setOnRestart(run);
     }
@@ -61,6 +67,9 @@ public class GameState {
     }
     public void hidePause(){
         pausePanel.hide();
+    }
+    public void resetScore(){
+        score.reset();
     }
 
 }

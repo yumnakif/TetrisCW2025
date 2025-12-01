@@ -180,8 +180,14 @@ import javafx.scene.shape.Rectangle;
             for (int i = 2; i < boardMatrix.length; i++) {
                 for (int j = 0; j < boardMatrix[i].length; j++) {
                     int colorint= boardMatrix[i][j];
-                    Color brickColor = BrickShape.getColorInt(colorint);
-                    setRectangleData(brickColor,displayMatrix[i][j]);
+                    if(colorint==8){
+                        setRectangleData(Color.GRAY,displayMatrix[i][j]);
+                    }
+                    else if(colorint>=0){
+                        Color brickColor = BrickShape.getColorInt(colorint);
+                        setRectangleData(brickColor,displayMatrix[i][j]);
+                    }
+
                 }
             }
         }
@@ -206,4 +212,3 @@ import javafx.scene.shape.Rectangle;
             }
         }
     }
-

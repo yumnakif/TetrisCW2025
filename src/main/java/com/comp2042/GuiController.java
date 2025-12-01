@@ -54,6 +54,10 @@ public class GuiController implements Initializable {
 
     private Timeline timeLine;
 
+    private Timeline downTimeline;
+
+    private boolean downKeyPressed;
+
     private InputEventListener eventListener;
 
     private Stopwatch stopwatch;
@@ -62,11 +66,7 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
-    private PausePanel pauseOverlay;
-
     private static MenuScreen menuScreen;
-
-    private boolean downDrop=false;
 
     private GameRender renderer;
     private InputHandler inputHandler;
@@ -89,21 +89,50 @@ public class GuiController implements Initializable {
 
         setupTimeline();
     }
-    public void initInputHandler(){
-        inputHandler=new InputHandler(eventListener,this::hardDrop, this::handleNewGame);
-        gamePanel.setOnKeyPressed(e->inputHandler.handle(e,isPause.get(),isGameOver.get()));
-    }
-
     private void setupTimeline(){
         timeLine = new Timeline(new KeyFrame(Duration.millis(300),
                 ae -> {
-                    moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                    if(!downKeyPressed){
+                        moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                    }
                 }
-
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
+
+        downTimeline=new Timeline(new KeyFrame(Duration.millis(50),
+                ae-> {
+                        if(downKeyPressed) {
+                            moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
+                        }else{
+                            downTimeline.stop();
+                        }
+        }
+        ));
+        downTimeline.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
+
+    public void initInputHandler(){
+        inputHandler=new InputHandler(eventListener,this::hardDrop, this::handleNewGame);
+        gamePanel.setOnKeyPressed(e->{
+                if(!isPause.get()&& !isGameOver.get()){
+                    if(e.getCode()==KeyCode.DOWN || e.getCode()==KeyCode.S){
+                        downKeyPressed=true;
+                        downTimeline.play();
+                    }
+                    else{
+                        inputHandler.handle(e,isPause.get(),isGameOver.get());
+                    }
+                }
+        });
+        gamePanel.setOnKeyReleased(e->{
+            if(e.getCode()==KeyCode.DOWN || e.getCode()==KeyCode.S){
+                downKeyPressed=false;
+                downTimeline.stop();
+            }
+        });
+    }
+
     public GameRender getRenderer(){
         return renderer;
     }
@@ -150,6 +179,8 @@ public class GuiController implements Initializable {
         state.pauseToggle(pauseButton);
         if (state.isPaused()) {
             timeLine.pause();
+            downTimeline.stop();
+            downKeyPressed = false;
             isPause.set(true);
             stopwatch.stop();
         }
@@ -167,6 +198,7 @@ public class GuiController implements Initializable {
     public void restartGame(){
         if(timeLine!=null){
             timeLine.stop();
+            downTimeline.stop();
         }
         state.hidePause();
         state.hideGameOver();

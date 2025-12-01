@@ -27,14 +27,11 @@ public class MenuScreen {
     public void show(){
         Image titleImage= new Image(getClass().getResource("/TETRIS_title.png").toExternalForm());
         ImageView titleView = new ImageView(titleImage);
-
-
         titleView.setPreserveRatio(true);
         titleView.setFitWidth(600);
 
         Button startButton = new Button("Start Game");
         Button exitButton = new Button("Exit");
-
         VBox layout = new VBox(20, titleView, startButton, exitButton);
         layout.setAlignment(Pos.CENTER);
 
@@ -48,11 +45,9 @@ public class MenuScreen {
         exitButton.setOnAction(e -> {
             if (onExit != null) onExit.run();
         });
-
         stage.setScene((menuScene));
         stage.setResizable(false);
         stage.show();
-
     }
     public void returntoMenu(){
         show();

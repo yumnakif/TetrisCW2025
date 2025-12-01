@@ -38,7 +38,7 @@ public class MenuScreen {
         VBox layout = new VBox(20, titleView, startButton, exitButton);
         layout.setAlignment(Pos.CENTER);
 
-        Scene menuScene =new Scene(layout,600,657);
+        Scene menuScene =new Scene(layout,600,660);
         menuScene.getStylesheets().add(getClass().getResource("/menu_style.css").toExternalForm());
 
         startButton.setOnAction(e -> {

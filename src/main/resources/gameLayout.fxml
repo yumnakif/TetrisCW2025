@@ -33,11 +33,11 @@
             </VBox>
             <VBox alignment="CENTER" spacing="20" styleClass="info-box" prefHeight="130" prefWidth="140">
                 <Label text="NEXT" styleClass="info-title"/>
-                <GridPane fx:id="nextBlockPreview" hgap="2" vgap="2" minHeight="70" minWidth="100"/>
+                <GridPane fx:id="nextBlockPreview" hgap="2" vgap="2" minHeight="60" minWidth="100"/>
             </VBox>
             <VBox alignment="CENTER" spacing="10" styleClass="info-box">
                 <Label text="Score" styleClass="info-title" />
-                <Label fx:id="scoreLabel" text="0" styleClass="info-value" />
+                <Label fx:id="scoreLabel" text="0" styleClass="scoreClass" />
             </VBox>
             <VBox alignment="CENTER" spacing="10" styleClass="info-box">
                 <Label text="High Score" styleClass="info-title" />
@@ -52,7 +52,6 @@
                 <Label fx:id="linesRemovedLabel" text="0" styleClass="info-value" />
             </VBox>
             <Pane VBox.vgrow="ALWAYS"/>
-
             <Button fx:id="pauseButton" text="Pause" onAction="#pauseGame" prefWidth="120" styleClass="pause-btn" />
         </VBox>
     </right>

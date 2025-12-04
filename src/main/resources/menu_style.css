@@ -1,47 +1,107 @@
 .root{
-    -fx-background-color: #000000;
+    -fx-background-color: linear-gradient(to bottom,
+    #1a0033 0%,
+    #0d001a 15%,
+    #000000 45%,
+    #000000 55%,
+    #0d001a 85%,
+    #1a0033 100%
+    );
 }
+
 .button{
     -fx-pref-width: 190px;
-    -fx-pref-height: 40px;
-
-    -fx-background-color: linear-gradient(to bottom, #7904bd 0%, #5c0390 100%);
+    -fx-pref-height: 48px;
+    -fx-background-color: linear-gradient(to bottom, #3d0398 0%, #5d00f2 100%);
     -fx-text-fill: white;
     -fx-font-family:"Lucida Console";
     -fx-font-size: 25;
-    -fx-font-weight: bolder;
-    -fx-border-color: #9566b0;
+    -fx-font-weight: bold;
+    -fx-border-color: #5d00f2;
     -fx-border-width: 2;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(121,4,189,0.4), 8, 0.5, 0, 2);
-}
-.button:hover {
-    -fx-background-color: linear-gradient(to bottom, #9566b0 0%, #7a4f9b 100%);
-    -fx-effect: dropshadow(gaussian, rgba(149,102,176,0.6), 10, 0.7, 0, 3);
-}
-.pause-btn:pressed {
-    -fx-background-color: linear-gradient(to bottom, #4f5052 0%, #3a3b3c 100%);
-    -fx-translate-y: 1px;}
+    -fx-effect: dropshadow(gaussian, rgba(93, 0, 242, 0.6), 10, 0.5, 0, 3);
+    -fx-transition: all 0.2s;
 }
 
-.pause-menu{
-    -fx-alignment: center;
-    -fx-background-color: rgba(40, 40, 40, 0.9);
-    -fx-padding: 30;
-    -fx-background-radius: 10;
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5d00f2 0%, #3d0398 100%);
+    -fx-effect: dropshadow(gaussian, rgba(93, 0, 242, 0.8), 15, 0.7, 0, 5);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
 }
+
+.button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: dropshadow(gaussian, rgba(93, 0, 242, 0.4), 5, 0.5, 0, 1);
+}
+
+.gameOverStyle {
+    -fx-font-size: 70px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Let's go Digital";
+    -fx-effect: dropshadow(gaussian, #be0606, 25, 0.8, 0, 0),
+    glow(1.2),
+    innershadow(gaussian, #ff0000, 10, 0.5, 0, 0);
+    -fx-text-alignment: center;
+}
+
+.pause-btn:pressed {
+    -fx-background-color: linear-gradient(to bottom, #17003a 0%, #01264a 100%);
+    -fx-translate-y: 1px;
+}
+
+.menu-style{
+    -fx-alignment: center;
+    -fx-background-color: linear-gradient(to bottom,
+    rgba(30, 30, 30, 0.95) 0%,
+    rgba(20, 20, 20, 0.95) 100%
+    );
+    -fx-background-radius: 15;
+    -fx-border-color: linear-gradient(to bottom, #5d00f2, #3d0398);
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+    -fx-padding: 35;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 20, 0.5, 0, 5);
+}
+
 .pause-title{
     -fx-text-fill: white;
-    -fx-font-family: "Lucida Console";
-    -fx-font-size: 24px;
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 40px;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #025858, 25, 0.8, 0, 0),
+    glow(0.7);
+    -fx-padding: 0 0 20 0;
 }
 
 .score-display{
-    -fx-font-family:"sans-serif";
-    -fx-font-size: 18px;
-    -fx-font-weight: 600;
+    -fx-font-family: "Lucida Console";
+    -fx-font-size: 18;
     -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 3, 0.8, 1, 1);
+    -fx-padding: 5;
+}
+
+.time-display {
+    -fx-font-family: "Lucida Console";
+    -fx-font-size: 16px;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 3, 0.8, 1, 1);
+    -fx-background-color: rgba(30, 30, 30, 0.7);
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.overlay-effect {
+    -fx-background-color: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    transparent 100%
+    );
 }

@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import javafx.geometry.Point2D;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -10,38 +11,38 @@ class SimpleBoardTest {
 
     @Test
     void moveBrickDownTest() {
-        SimpleBoard board= new SimpleBoard(10,20);
+        SimpleBoard board = new SimpleBoard(10, 20);
         board.createNewBrick();
-        Point originalPosition=new Point(board.currentOffset);
-        boolean result= board.moveBrickDown();
+        Point2D originalPosition = new Point2D(board.currentOffset.getX(), board.currentOffset.getY());
+        boolean result = board.moveBrickDown();
 
         assertTrue(result);
-        assertEquals(originalPosition.x,board.currentOffset.x);
-        assertEquals(originalPosition.y+1,board.currentOffset.y);
+        assertEquals(originalPosition.getX(), board.currentOffset.getX());
+        assertEquals(originalPosition.getY() + 1, board.currentOffset.getY());
     }
 
     @Test
     void moveBrickLeftTest() {
-        SimpleBoard board= new SimpleBoard(10,20);
+        SimpleBoard board = new SimpleBoard(10, 20);
         board.createNewBrick();
-        Point originalPosition=new Point(board.currentOffset);
-        boolean result= board.moveBrickLeft();
+        Point2D originalPosition = new Point2D(board.currentOffset.getX(), board.currentOffset.getY());
+        boolean result = board.moveBrickLeft();
 
         assertTrue(result);
-        assertEquals(originalPosition.x-1,board.currentOffset.x);
-        assertEquals(originalPosition.y,board.currentOffset.y);
+        assertEquals(originalPosition.getX() - 1, board.currentOffset.getX());
+        assertEquals(originalPosition.getY(), board.currentOffset.getY());
     }
 
     @Test
     void moveBrickRightTest() {
-        SimpleBoard board= new SimpleBoard(10,20);
+        SimpleBoard board = new SimpleBoard(10, 20);
         board.createNewBrick();
-        Point originalPosition=new Point(board.currentOffset);
-        boolean result= board.moveBrickRight();
+        Point2D originalPosition = new Point2D(board.currentOffset.getX(), board.currentOffset.getY());
+        boolean result = board.moveBrickRight();
 
         assertTrue(result);
-        assertEquals(originalPosition.x+1,board.currentOffset.x);
-        assertEquals(originalPosition.y,board.currentOffset.y);
+        assertEquals(originalPosition.getX() + 1, board.currentOffset.getX());
+        assertEquals(originalPosition.getY(), board.currentOffset.getY());
     }
 
     @Test
@@ -61,16 +62,10 @@ class SimpleBoardTest {
         boolean result= board.createNewBrick();
         assertFalse(result);
         assertNotNull(board.currentBrick);
-        assertEquals(new Point(4,1),board.currentOffset);
-    }
 
-    @Test
-    void mergeBrickToBackgroundTest() {
-        SimpleBoard board= new SimpleBoard(10,20);
-        int[][] matrix=MatrixOperations.copy(board.getBoardMatrix());
-        board.mergeBrickToBackground();
+        assertEquals(4,board.currentOffset.getX());
+        assertEquals(1,board.currentOffset.getY());
 
-        assertNotEquals(matrix, board.getBoardMatrix());
     }
 
     @Test

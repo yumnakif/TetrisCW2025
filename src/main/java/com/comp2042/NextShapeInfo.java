@@ -2,6 +2,10 @@ package com.comp2042;
 
 import com.comp2042.logic.bricks.Brick;
 
+/**
+ * Container class for information about the next brick shape
+ * Holds the brick matrix and brick object to display the preview
+ */
 public final class NextShapeInfo {
 
     private final int[][] shape;

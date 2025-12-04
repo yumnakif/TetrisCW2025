@@ -4,16 +4,32 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
+/**
+ * Main entry point for the tetris game application
+ * Manages the JavaFX application and coordinates between menu screen and game interface
+ *
+ * @see MenuScreen
+ * @see GuiController
+ * @see GameController
+ */
 public class Main extends Application {
     private MenuScreen menuScreen;
 
+
+    /**
+     * The entry point for the application
+     * Initialized and displays the menu screen and sets up event handlers for gem start and exit actions
+     *
+     * @param primaryStage the primary stage for the application
+     * @throws Exception if any initialization error occurs
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -27,6 +43,13 @@ public class Main extends Application {
         primaryStage.getIcons().add(logo);
     }
 
+
+    /**
+     * Loads and displays the main game scene
+     * Loads the FXML layout and initializes the controllers
+     * Sets up game interface
+     * @param primaryStage the stage to display the game scene on
+     */
     public void loadGameScene(Stage primaryStage){
         try{
             URL location = Main.class.getClassLoader().getResource("gameLayout.fxml");
@@ -47,6 +70,11 @@ public class Main extends Application {
         }
     }
 
+
+    /**
+     * Main method to launch the application
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }

@@ -6,6 +6,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ *Renders the Tetris game visuals
+ * Manages the display of the game board, current brick, ghost piece and next block preview
+ */
     public class GameRender {
         private static final int BRICK_SIZE = 20;
         @FXML
@@ -23,17 +27,31 @@ import javafx.scene.shape.Rectangle;
         private Rectangle[][] displayMatrix;
         private Rectangle[][] rectangles;
 
+        /**
+         * Creates a rendered with specified game panels
+         * @param gamePanel GridPane for the game board
+         * @param brickPanel GridPane for the current brick
+         * @param ghostPanel GridPane for the ghost piece preview
+         */
         public GameRender(GridPane gamePanel, GridPane brickPanel, GridPane ghostPanel){
             this.gamePanel=gamePanel;
             this.brickPanel=brickPanel;
             this.ghostPanel=ghostPanel;
         }
 
-        public void setNextBlockPreview(GridPane nextBlockPreview){
+    /**
+     * sets the next block preview
+     * @param nextBlockPreview GridPane for the next block display
+     */
+    public void setNextBlockPreview(GridPane nextBlockPreview){
             this.nextBlockPreview=nextBlockPreview;
         }
 
-        public void initGameView(int[][] boardMatrix) {
+    /**
+     * Initializes the main game board view with black rectangles
+     * @param boardMatrix the game board matrix to initialize display for
+     */
+    public void initGameView(int[][] boardMatrix) {
 
             int rows=boardMatrix.length;
             int cols=boardMatrix[0].length;
@@ -64,7 +82,11 @@ import javafx.scene.shape.Rectangle;
             }
         }
 
-        public void initBrick(ViewData brick){
+    /**
+     * Initializes the current brick display with invisible rectangles.
+     * @param brick ViewData containing brick information
+     */
+    public void initBrick(ViewData brick){
             rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
@@ -76,6 +98,10 @@ import javafx.scene.shape.Rectangle;
             }
         }
 
+    /**
+     * Update the current brick's position and appearance
+     * @param brick ViewData containing brick position and shape
+     */
         public void refreshBrick(ViewData brick){
             int[][] shape=brick.getBrickData();
             Color brickColor = brick.getBrick().getColor();
@@ -94,7 +120,12 @@ import javafx.scene.shape.Rectangle;
                 }
             }
         }
-        public void updateNextShape(NextShapeInfo nextShapeInfo) {
+
+    /**
+     * Updates the next block preview display.
+     * @param nextShapeInfo information about the next brick shape
+     */
+    public void updateNextShape(NextShapeInfo nextShapeInfo) {
             if (nextBlockPreview == null) {
                 return;
             }
@@ -118,6 +149,11 @@ import javafx.scene.shape.Rectangle;
             }
         }
 
+    /**
+     * Updates the ghost piece preview of where the brick will land
+     * @param brick current brick data
+     * @param ghostBoard current board state for collision checking
+     */
         public void refreshGhost(ViewData brick, int[][] ghostBoard) {
             if(brick==null || ghostMatrix==null){
                 return;
@@ -155,6 +191,14 @@ import javafx.scene.shape.Rectangle;
             }
         }
 
+    /**
+     * Check if a brick collides with the board at a given position
+      * @param board current game board matrix
+     * @param brick brick shape matrix
+     * @param x x coordinate to check
+     * @param y y coordinate to check
+     * @return true if collision detected, false if no collision
+     */
         private static boolean collides(int[][] board, int[][] brick, int x, int y) {
             for (int i = 0; i < brick.length; i++) {
                 for (int j = 0; j < brick[i].length; j++) {
@@ -176,6 +220,10 @@ import javafx.scene.shape.Rectangle;
             return false;
         }
 
+    /**
+     * Updates the background board with placed bricks
+     * @param boardMatrix Current board matrix with placed bricks
+     */
         public void refreshBackground(int[][] boardMatrix){
             for (int i = 2; i < boardMatrix.length; i++) {
                 for (int j = 0; j < boardMatrix[i].length; j++) {
@@ -192,12 +240,21 @@ import javafx.scene.shape.Rectangle;
             }
         }
 
-        private void setRectangleData(Color color, Rectangle rectangle) {
+    /**
+     * Set the style for the rectangles
+     * @param color fill color of the rectangle
+     * @param rectangle the rectangle to style
+     */
+    private void setRectangleData(Color color, Rectangle rectangle) {
             rectangle.setFill(color);
             rectangle.setArcHeight(5);
             rectangle.setArcWidth(5);
         }
-        public void clearBoard(){
+
+    /**
+     * Clear all game visuals and reset to initial state
+     */
+    public void clearBoard(){
             if(displayMatrix!=null){
                 for(Rectangle[] row: displayMatrix){
                     for (Rectangle rectangle:row){

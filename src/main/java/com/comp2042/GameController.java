@@ -5,7 +5,12 @@ import com.comp2042.logic.levels.Level4;
 import com.comp2042.logic.levels.LevelManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.control.Label;
 
+/**
+ * Main game controller handling the game logic, input events and level progression
+ * Implements InputEventListener to process user inputs and manage game state
+ */
 public class GameController implements InputEventListener {
     private final int height= 34;
     private final int width=20;
@@ -17,6 +22,10 @@ public class GameController implements InputEventListener {
     private final GuiController viewGuiController;
     private LevelManager levelManager=new LevelManager();
 
+    /**
+     * Create a new game controller with specified GUI controller
+     * @param c the GUI controller for rendering and user inputs
+     */
     public GameController(GuiController c) {
         viewGuiController = c;
         board.createNewBrick();
@@ -31,6 +40,11 @@ public class GameController implements InputEventListener {
         viewGuiController.newGame(null);
     }
 
+    /**
+     * Handles down movement events, automatic or user initiated
+     * @param event MoveEvent contatining event type and source
+     * @return DownData with clearance results and current view data
+     */
     @Override
     public DownData onDownEvent(MoveEvent event) {
 
@@ -70,7 +84,11 @@ public class GameController implements InputEventListener {
         return new DownData(clearRow, board.getViewData());
     }
 
-
+    /**
+     * Handles left movement event with revrse control
+     * @param event MoveEvent containing event type and source
+     * @return ViewData with updated brick position
+     */
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
         if(levelManager.getCurrentLevel().hasReverseControl()&&levelManager.getCurrentLevel().isSwapped()){
@@ -84,6 +102,11 @@ public class GameController implements InputEventListener {
         return viewData;
     }
 
+    /**
+     * Handles right movement events with reverse control
+     * @param event MoveEvent containing event type and source
+     * @return ViewData with updated brick position
+     */
     @Override
     public ViewData onRightEvent(MoveEvent event) {
         if(levelManager.getCurrentLevel().hasReverseControl()&&levelManager.getCurrentLevel().isSwapped()){
@@ -97,6 +120,11 @@ public class GameController implements InputEventListener {
 
     }
 
+    /**
+     * Handles brick rotation events
+     * @param event MoveEvent containing event type and source
+     * @return ViewData with updated brick position
+     */
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
         board.rotateBrick();
@@ -105,6 +133,11 @@ public class GameController implements InputEventListener {
         return viewData;
     }
 
+    /**
+     * Handles hard drop events to instantly place brick
+     * @param event MoveEvent containing event type and source
+     * @return ViewData with clearance results and view data
+     */
     @Override
     public DownData onHardDropEvent(MoveEvent event){
         boolean canMove=true;
@@ -132,17 +165,27 @@ public class GameController implements InputEventListener {
         return new DownData(clearRow,viewData);
     }
 
+    /**
+     * Gets information about the next brick shape
+     * @return NextShapeInfo containing next brick data
+     */
     @Override
     public NextShapeInfo getNextShape(){
         return board.getNextShape();
 }
 
+    /**
+     * Gets the current game board matrix
+     * @return 2D array showing the game board state
+     */
     @Override
     public int[][] getBoardMatrix(){
         return board.getBoardMatrix();
     }
 
-
+    /**
+     * Updated the brick speed based on the current level multiplier
+     */
     private void updateSpeed(){
         //update the new calculated speed according to level to GuiController to update the timeline
         int newSpeed=(int) (fallSpeed/levelManager.getCurrentLevel().getSpeedMultiplier());
@@ -152,15 +195,26 @@ public class GameController implements InputEventListener {
         viewGuiController.updateTimelineSpeed(newSpeed);
     }
 
+    /**
+     *Gets observable property for lines removed count
+     * @return IntegerProperty tracking cleared lines
+     */
     public IntegerProperty linesRemovedProperty(){
         return linesProperty;
     }
 
+    /**
+     * Increments the level based on players total lines cleared
+     * Level increases every 5 lines cleared
+     */
     private void checkLevelup() {
         //increase level every 5 lines cleared
         int expLevel=totalLines/5 +1;
         if(expLevel>levelManager.getCurrentLevel().getLevelNumber()){
             while(expLevel>levelManager.getCurrentLevel().getLevelNumber()){
+                Label levelLabel=new Label("Next Level: "+levelManager.getCurrentLevel().getLevelNumber());
+                levelLabel.setStyle("-fx-font-size:20; -fx-text-fill: gold;");
+
                 levelManager.nextLevel();
             }
             updateSpeed();
@@ -168,6 +222,10 @@ public class GameController implements InputEventListener {
         }
     }
 
+    /**
+     * Applies level specific effects when transitioning between lvels
+     * Handles the static and dynamic obstacles, fog, controls swap, etc
+     */
     private void applyLevelFunction(){
         Level level=levelManager.getCurrentLevel();
         Level previousLevel=levelManager.getPreviousLevel();
@@ -196,6 +254,9 @@ public class GameController implements InputEventListener {
         viewGuiController.getRenderer().refreshBackground(board.getBoardMatrix());
     }
 
+    /**
+     * Resets the game to initial state for a new game session
+     */
     @Override
     public void createNewGame() {
         totalLines=0;

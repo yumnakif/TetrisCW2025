@@ -5,20 +5,38 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+/**
+ * Level 8 implementation with dynamic obstacles that appear and disappear periodically
+ * Obstacles toggle visibility every 10 seconds and appear in random spots
+ */
 public class Level8 extends SpeedLevel{
     private Timeline obstacleTimeline;
     private boolean obstacleVisible=false;
     private int[][] currentObstacles;
 
+    /**
+     * Create level 8 with specified level number and speed increase rate
+     * @param levelNumber the level number, 8
+     * @param increaseRate rate at which game speed increases
+     */
     public Level8(int levelNumber, double increaseRate){
         super(levelNumber,increaseRate);
     }
 
+    /**
+     * Indicates the level has dynamic obstacles
+     * @return true
+     */
     @Override
     public boolean hasDynamicObstacles(){
         return true;
     }
 
+    /**
+     * Start the dynamic obstacle animation cycle
+     * create a timeline that toggles obstacles to change positions every 10 seconds
+     * @param board the game board to place obstacles on
+     */
     @Override
     public void startDynamicObstacles(Board board){
         stopObstacles();
@@ -29,6 +47,9 @@ public class Level8 extends SpeedLevel{
         placeStaticObject(board);
     }
 
+    /**
+     * Stops the dynamic obstacle animation and removes all obstacles.
+     */
     @Override
     public void stopObstacles(){
         if(obstacleTimeline!=null){
@@ -39,6 +60,10 @@ public class Level8 extends SpeedLevel{
         currentObstacles=null;
     }
 
+    /**
+     * Toggles obstacle visibility on and off every 10 seconds.
+     * @param board the game board to update
+     */
     private void toggleObstacle(Board board){
         int[][] matrix=board.getBoardMatrix();
         if(obstacleVisible){
@@ -51,6 +76,11 @@ public class Level8 extends SpeedLevel{
         obstacleVisible= !obstacleVisible;
     }
 
+    /**
+     * Removes all gray obstacles of value 8 from the board.
+     * @param matrix the game board matrix
+     * @param currentObstacles array that tracks obstacle positions
+     */
     private void removeObstacles(int[][] matrix, int[][] currentObstacles) {
         if(currentObstacles!=null){
             for(int i=0;i<currentObstacles.length; i++){
@@ -73,6 +103,10 @@ public class Level8 extends SpeedLevel{
         }
     }
 
+    /**
+     * Places 3 new dynamic obstacles in random positions in the upper half of the board
+     * @param board the game board to place obstacles on
+     */
     private void placeDynamicObstacle(Board board) {
         int[][] matrix= board.getBoardMatrix();
         if(currentObstacles!=null){
@@ -93,10 +127,19 @@ public class Level8 extends SpeedLevel{
             obstacleVisible=true;
         }
     }
+
+    /**
+     * Indicates that this level does not contain static obstacles
+     * @return false
+     */
     @Override
     public boolean hasStaticObstacles(){
         return false;
     }
+    /**
+     * Indicates that this level does not contain fog effect
+     * @return false
+     */
     @Override
     public boolean hasFog(){
         return false;

@@ -3,13 +3,15 @@ package com.comp2042;
 import com.comp2042.logic.bricks.Brick;
 import com.comp2042.logic.bricks.BrickOperations;
 
+/**
+ * Returns the brick data and its coordinates
+ */
 public final class ViewData {
 
     private final int[][] brickData;
     private final int xPosition;
     private final int yPosition;
     private final Brick brick;
-    //private final int[][] nextBrickData;
 
     public ViewData(int[][] brickData, int xPosition, int yPosition,Brick brick) {
         this.brickData = brickData;

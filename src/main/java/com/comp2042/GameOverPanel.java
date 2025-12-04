@@ -18,6 +18,7 @@ public class GameOverPanel {
     private Runnable onNewGame;
     private Runnable onMainMenu;
     private final Label scoreLabel;
+    private final Label timeLabel;
     private Score score;
 
     public GameOverPanel() {
@@ -32,15 +33,19 @@ public class GameOverPanel {
         scoreLabel.setTextAlignment(TextAlignment.CENTER);
         scoreLabel.setWrapText(true);
 
+        timeLabel=new Label();
+        timeLabel.getStyleClass().add("time-display");
+        timeLabel.setTextAlignment(TextAlignment.CENTER);
+
         newgameButton = new Button("New Game");
         newgameButton.getStyleClass().add("button");
 
         mainmenuButton = new Button("Main Menu");
         mainmenuButton.getStyleClass().add("button");
 
-        menuBox = new VBox(20, title, scoreLabel, newgameButton, mainmenuButton);
+        menuBox = new VBox(20, title, scoreLabel, timeLabel, newgameButton, mainmenuButton);
         menuBox.setAlignment(Pos.CENTER);
-        menuBox.getStyleClass().add("pause-menu");
+        menuBox.getStyleClass().add("menu-style");
 
         overlay = new StackPane(background, menuBox);
         overlay.setAlignment(Pos.CENTER);
@@ -66,18 +71,26 @@ public class GameOverPanel {
         this.score=score;
         scoreLabel.textProperty().bind(score.gameOverTextProperty());
     }
+
     public void setOnNewGame(Runnable newgame) {
         this.onNewGame = newgame;
     }
     public void setOnMainMenu(Runnable mainmenu) {
         this.onMainMenu = mainmenu;
     }
+
+    public void setElapsedTime(String elapsedTime){
+        timeLabel.setText("Time: "+ elapsedTime);
+    }
+
     public void show() {
         if(score!=null){
             score.setGameOverMessage();
         }
         overlay.setVisible(true);
     }
+
+
     public void hide() {
         overlay.setVisible(false);
     }

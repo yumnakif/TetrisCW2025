@@ -16,6 +16,7 @@ public class MenuScreen {
     private final Stage stage;
     private Runnable onStartGame;
     private Runnable onExit;
+    private Runnable onTimedGame;
 
     /**
      * Creates a menu screen for the specified stage
@@ -40,20 +41,27 @@ public class MenuScreen {
     public void setOnExit(Runnable onExit) {
         this.onExit = onExit;
     }
-
+    public void setOnTimedGame(Runnable onTimedGame) {
+        this.onTimedGame = onTimedGame;
+    }
     /**
      * Displays the menu screen with the  title image and buttons
      * Loads CSS styling and sets up button actions
      */
+
+
     public void show(){
         Image titleImage= new Image(getClass().getResource("/TETRIS_title.png").toExternalForm());
         ImageView titleView = new ImageView(titleImage);
+
         titleView.setPreserveRatio(true);
         titleView.setFitWidth(600);
 
         Button startButton = new Button("Start Game");
         Button exitButton = new Button("Exit");
-        VBox layout = new VBox(20, titleView, startButton, exitButton);
+        Button timedButton = new Button("Timed Game");
+
+        VBox layout = new VBox(20, titleView, startButton,timedButton, exitButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene menuScene =new Scene(layout,600,680);
@@ -66,6 +74,11 @@ public class MenuScreen {
         exitButton.setOnAction(e -> {
             if (onExit != null) onExit.run();
         });
+
+        timedButton.setOnAction(e -> {
+            if (onTimedGame != null) onTimedGame.run();
+        });
+
         stage.setScene((menuScene));
         stage.setResizable(false);
         stage.show();

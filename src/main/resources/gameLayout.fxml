@@ -27,9 +27,13 @@
     <right>
         <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 7;">
 
-            <VBox alignment="CENTER" spacing="10" styleClass="info-box">
+            <VBox alignment="CENTER" spacing="10" styleClass="info-box" fx:id="stopwatchBox">
                 <Label text="Time" styleClass="info-title"/>
                 <Label fx:id="stopwatchLabel" styleClass="info-value"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="10" styleClass="info-box" fx:id="timerBox">
+                <Label text="Time" styleClass="info-title"/>
+                <Label fx:id="timerLabel" styleClass="info-value"/>
             </VBox>
             <VBox alignment="CENTER" spacing="20" styleClass="info-box" prefHeight="130" prefWidth="140">
                 <Label text="NEXT" styleClass="info-title"/>

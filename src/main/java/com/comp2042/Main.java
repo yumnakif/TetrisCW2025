@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,6 +22,7 @@ public class Main extends Application {
         ResourceBundle resources = null;
         menuScreen=new MenuScreen(primaryStage);
         menuScreen.setOnStartGame(()-> loadGameScene(primaryStage));
+        menuScreen.setOnTimedGame(()-> startTimedGame(primaryStage));
         menuScreen.setOnExit(primaryStage::close);
         menuScreen.show();
         Image logo=new Image("Logo2.png");
@@ -47,6 +49,26 @@ public class Main extends Application {
         }
     }
 
+    public void startTimedGame(Stage primaryStage){
+        try{
+            URL location = Main.class.getClassLoader().getResource("gameLayout.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(location);
+
+            Parent root =fxmlLoader.load();
+            GuiController c = fxmlLoader.getController();
+            GuiController.setMenuScreen(menuScreen);
+
+            c.setTimedMode(true);
+            new GameController(c);
+            Scene scene = new Scene(root, 600, 680);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("TetrisJFX");
+            primaryStage.show();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         launch(args);
     }

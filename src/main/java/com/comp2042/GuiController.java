@@ -4,6 +4,7 @@ import com.comp2042.logic.bricks.BrickShape;
 import com.comp2042.logic.levels.Level;
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -48,6 +49,12 @@ public class GuiController implements Initializable {
     @FXML
     private Label stopwatchLabel;
     @FXML
+    private VBox stopwatchBox;
+    @FXML
+    private Label timerLabel;
+    @FXML
+    private VBox timerBox;
+    @FXML
     private Label linesRemovedLabel;
     @FXML
     private Label levelLabel;
@@ -69,6 +76,10 @@ public class GuiController implements Initializable {
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     private static MenuScreen menuScreen;
+
+    private boolean isTimedMode=false;
+
+    private TimedMode timedMode;
 
     private GameRender renderer;
     private InputHandler inputHandler;
@@ -101,6 +112,8 @@ public class GuiController implements Initializable {
         stackroot.getChildren().add(1,fogOverlay);
 
         highScoreLabel.textProperty().bind(state.getScore().highScoreProperty().asString("%d"));
+        timerBox.setVisible(false);
+        timerBox.setManaged(false);
 
         setupTimeline();
     }
@@ -172,6 +185,32 @@ public class GuiController implements Initializable {
         this.eventListener = eventListener;
     }
 
+    public void setTimedMode(boolean istimedMode) {
+        isTimedMode = istimedMode;
+        if(istimedMode){
+            this.timedMode=new TimedMode();
+            timerBox.setVisible(true);
+            timerBox.setManaged(true);
+            stopwatchBox.setVisible(false);
+            stopwatchBox.setManaged(false);
+
+            timedMode.bindTimer(timerLabel);
+
+            timedMode.setOnGameEnd(()->{
+                Platform.runLater(()->{
+                    gameOver();
+                });
+            });
+        } else{
+            timerBox.setVisible(false);
+            timerBox.setManaged(false);
+        }
+    }
+
+    public static void setMenuScreen(MenuScreen menuScreen){
+        GuiController.menuScreen=menuScreen;
+    }
+
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("%d"));
         integerProperty.addListener((obs, oldVal, newVal) -> {
@@ -189,19 +228,27 @@ public class GuiController implements Initializable {
         if (state.isPaused()) {
             timeLine.pause();
             isPause.set(true);
-            stopwatch.stop();
+            if(isTimedMode && timedMode!=null){
+                timedMode.pause();
+            }
+            else{
+                stopwatch.stop();
+            }
         }
         else{
             timeLine.play();
             isPause.set(false);
-            stopwatch.start();
+            if(isTimedMode && timedMode!=null){
+                timedMode.resume();
+            }
+            else{
+                stopwatch.start();
+            }
         }
         gamePanel.requestFocus();
     }
 
-    public static void setMenuScreen(MenuScreen menuScreen){
-        GuiController.menuScreen=menuScreen;
-    }
+
     public void restartGame(){
         if(timeLine!=null){
             timeLine.stop();
@@ -214,6 +261,10 @@ public class GuiController implements Initializable {
         fogOverlay.setVisible(false);
         state.resetScore();
         renderer.clearBoard();
+        if(isTimedMode && timedMode!=null){
+            timedMode.reset();
+        }
+
         newGame(null);
 
     }
@@ -230,7 +281,11 @@ public class GuiController implements Initializable {
     public void gameOver() {
         isGameOver.setValue(Boolean.TRUE);
         timeLine.stop();
-        stopwatch.stop();
+        if(isTimedMode && timedMode!=null){
+            timedMode.stop();
+        }else {
+            stopwatch.stop();
+        }
         state.showGameOver();
     }
 
@@ -245,11 +300,25 @@ public class GuiController implements Initializable {
         if(timeLine!=null){timeLine.stop();}
         eventListener.createNewGame();
         gamePanel.requestFocus();
-        stopwatch.restart();
-        timeLine.play();
-        isPause.setValue(Boolean.FALSE);
-        isGameOver.setValue(Boolean.FALSE);
-        renderer.updateNextShape(eventListener.getNextShape());
-        ghostPanel.getChildren().clear();
+
+        if(isTimedMode){
+            stopwatch.reset();
+            if(timedMode!=null){
+                timedMode.start();
+            }
+            timeLine.play();
+            isPause.setValue(Boolean.FALSE);
+            isGameOver.setValue(Boolean.FALSE);
+            renderer.updateNextShape(eventListener.getNextShape());
+            ghostPanel.getChildren().clear();
+
+        }else {
+            stopwatch.restart();
+            timeLine.play();
+            isPause.setValue(Boolean.FALSE);
+            isGameOver.setValue(Boolean.FALSE);
+            renderer.updateNextShape(eventListener.getNextShape());
+            ghostPanel.getChildren().clear();
+        }
     }
 }

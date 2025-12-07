@@ -211,7 +211,7 @@ public class GameController implements InputEventListener {
      * Level increases every 5 lines cleared
      */
     private void checkLevelup() {
-        int expLevel=totalLines/5 +1;
+        int expLevel=totalLines/3 +1;
         if(expLevel> levelController.getCurrentLevel().getLevelNumber()){
             while(expLevel> levelController.getCurrentLevel().getLevelNumber()){
                 Label levelLabel=new Label("Level: "+ levelController.getCurrentLevel().getLevelNumber());

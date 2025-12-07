@@ -298,8 +298,10 @@ public class GuiController implements Initializable {
      */
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("%d"));
+        state.getScore().add(integerProperty.get());
         integerProperty.addListener((obs, oldVal, newVal) -> {
-            state.getScore().add(newVal.intValue() - oldVal.intValue());
+            int difference=newVal.intValue()-state.getScore().scoreProperty().get();
+            state.getScore().add(difference);
         });
     }
 

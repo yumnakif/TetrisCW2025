@@ -104,7 +104,7 @@ public class Challenges extends SpeedLevel{
     @Override
     public void startDynamicObstacles(Board board){
         stopObstacles();
-        obstacleTimeline=new Timeline(new KeyFrame(Duration.seconds(10), e->{
+        obstacleTimeline=new Timeline(new KeyFrame(Duration.seconds(7), e->{
             int[][] matrix=board.getBoardMatrix();
             if(obstacleVisible){
                 removeObstacles(matrix,currentObstacles);

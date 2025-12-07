@@ -9,13 +9,14 @@ GitHub: https://github.com/yumnakif/TetrisCW2025.git
 1. Clone the repository from the link provided 
 2. Open or import the folder as a Maven project (Recommended IDE IntelliJ or Eclipse)
 3. Under File -> Project Structure -> Libraries set the JDK to Java 23
-4. IntelliJ: Open the Maven toolbar (usually on right side)
-   5. Navigate to Plugins-> javafx-> javafx:run
-   6. Double click javafx:run to execute
+   
+5. IntelliJ: Open the Maven toolbar (usually on right side)
+6. Navigate to Plugins-> javafx-> javafx:run
+7. Double click javafx:run to execute
 
-7. Eclipse: Right-click the project, Run as Maven Build
-   8. In Goals enter: clean compile javafx:run
-   9. Click Run
+8. Eclipse: Right-click the project, Run as Maven Build
+9. In Goals enter: clean compile javafx:run
+10. Click Run
 
 
 **_FEATURES:-_**

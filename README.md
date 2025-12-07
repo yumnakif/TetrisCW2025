@@ -140,8 +140,8 @@ Game over screen displaying game statistics and navigation options when the curr
 **• New Java Classes:-**
 
 com.comp2042.ui:
-1. GameRender: Responsible for visual rendering and display management of the Tetris game. It handles the graphical components
-    including the game board, the current falling brick, ghost piece preview and the next block preview.
+1. GameRender: Responsible for visual rendering and display management of the Tetris game. 
+    - It handles the graphical components including the game board, the current falling brick, ghost piece preview and the next block preview.
     - GameRender class translates the logic into visual elements on the screen.
 
 2. GameState: Manages the game state panels if the game is in Pause or Game over mode
@@ -159,16 +159,16 @@ com.comp2042.ui:
     - Pause Panel contains Restart Game button to start a new game session in the current scene without returning to menu
     - Main menu button to return to the menu screen.
 
-com.comp2042.logic.board:
+    com.comp2042.logic.board:
 6. Stopwatch: Tracks the time during gameplay, initially starting from 00:00 and displayed in MM:SS format
     - Handles stop, start, reset and restart and binding to label logic for the stopwatch.
 
-com.comp2042.logic.modes:
+    com.comp2042.logic.modes:
 7. TimedMode: Starts a timed game when Timed Mode button is clicked in main menu. Starts a 60-second timer when the game is started
-    - Handles stop, start, reset and restart and bind to label logic for the timer.
+   - Handles stop, start, reset and restart and bind to label logic for the timer.
    - The game ends when the timer expires.
 
-com.comp2042.logic.bricks:
+      com.comp2042.logic.bricks:
 8. BrickOperations: Handles the rotation, transformation and state management of the Tetrominoes.
     - Implements the rotation logic for all the bricks while including collision and wall checking.
     - Maintains the current orientation and provides access to brick shape matrix in the current rotation state.
@@ -177,7 +177,7 @@ com.comp2042.logic.bricks:
     - Purpose of implementing this class is to centralize the shape definitions and keep all the data about the brick color and matrix in one place.
    - Simplifies the brick creation and allows the code to be more maintainable.
 
-com.comp2042.logic.levels:
+    com.comp2042.logic.levels:
 10. Level: Abstract class providing the interface for the game levels.
     - Declares methods for applying effects according to the levels, checks level properties, managing level transitions.
     - SpeedLevel and Challenges classes extend this class which allows consistent behaviour.
@@ -212,37 +212,37 @@ com.comp2042.logic.levels:
 **• Modified Java Classes:**
 
 com.comp2042
-Main: Enhanced to display a menu screen before gameplay begins
-*     Includes buttons to Start game, start a timed mode game or Exit the application and handles the application accordingly. 
-*     This provides a structured entry point for the game features.
+* Main: Enhanced to display a menu screen before gameplay begins
+    - Includes buttons to Start game, start a timed mode game or Exit the application and handles the application accordingly. 
+    - This provides a structured entry point for the game features.
 
 com.comp2042.input:
-- EventType: Added HARD_DROP event for immediate placement of brick when Enter button is clicked in order to extend user control options
-- InputEventListener: Extended with methods to get next shape, board matrix, and to handle hard drop event, 
+* EventType: Added HARD_DROP event for immediate placement of brick when Enter button is clicked in order to extend user control options
+* InputEventListener: Extended with methods to get next shape, board matrix, and to handle hard drop event, 
     to make the input management more comprehensive
 
 com.comp2042.controller:
 * GameController: Major modifications made to integrate the new level system and challenge mechanics, including obstacle placement,
     wind effects, key controls reversal and fog overlay application.
-    The movement methods were modified to manage the event of reverse control challenges in order to swap the key functions.
-    Methods created to manage activating or ending challenge effects and transitioning between the levels
-    Implemented lines removed counting and the level progression accordingly
+  - The movement methods were modified to manage the event of reverse control challenges in order to swap the key functions.
+  - Methods created to manage activating or ending challenge effects and transitioning between the levels
+  - Implemented lines removed counting and the level progression accordingly
 
 * GuiController: Extensive overhaul to divide functionality into specialized classes
-    Board rendering logic moved to GameRender, input processing included in InputHandler, pause and game over screens managed in GameState 
-    Implemented JavaFX binding for better synchronization between the game state and the UI display
-    Created a separate Timeline for user initiated down movement to create a smoother movement when down key is pressed and ensure smoother gameplay experience
-    Added a method to handle the timed mode gameplay mode with the appropriate UI alterations
-    Fog overlay effect handled according to the level challenges
-    Created interfaces for connecting game logic updates with visual responses with the rendering system
-    Manages integration of UI components and classes with reduced logic handling within the class
-    Included Stopwatch Label component to make stopwatch visible in normal game mode
-    Handles visibility of Stopwatch and Timer labels depending on the game mode
+  - Board rendering logic moved to GameRender, input processing included in InputHandler, pause and game over screens managed in GameState 
+  - Implemented JavaFX binding for better synchronization between the game state and the UI display
+  - Created a separate Timeline for user initiated down movement to create a smoother movement when down key is pressed and ensure smoother gameplay experience
+  - Added a method to handle the timed mode gameplay mode with the appropriate UI alterations
+  - Fog overlay effect handled according to the level challenges
+  - Created interfaces for connecting game logic updates with visual responses with the rendering system
+  - Manages integration of UI components and classes with reduced logic handling within the class
+  - Included Stopwatch Label component to make stopwatch visible in normal game mode
+  - Handles visibility of Stopwatch and Timer labels depending on the game mode
 
 com.comp2042.ui:
 * GameOverPanel: Improved CSS styling of game over screen
-    Navigation buttons added to start new game or return to main menu
-    Game over screen now displays the score achieved in the current game as well as the saved high score and the time elapsed during the game
+  - Navigation buttons added to start new game or return to main menu
+  - Game over screen now displays the score achieved in the current game as well as the saved high score and the time elapsed during the game
 
 * NotificationPanel: Refined visual effects to make the notifications appear smoother and displays combo message when more than one line is cleared
 * ViewData: Replaced matrix based data with getBrick to return Brick object in order to work with the new brick system and provide better encapsulation
@@ -250,49 +250,49 @@ com.comp2042.ui:
 com.comp2042.logic.board:
 * Board: Modified the interface with next shape preview method to allow display of the next piece preview
 * NextShapeInfo: Changed to hold and get a Brick object instead of position based tracking to fit the refactored brick system
-    As well as cleaner data representation and encapsulation of Brick objects
+    - As well as cleaner data representation and encapsulation of Brick objects
 * Score: Enhanced by adding high score tracking, and improved game over message to show high score and current score achieved
 * SimpleBoard: Replaced usage of Point to Point2D for better precision. Removed BrickRotator class and object, as Brick handles its own rotation
-    Removed creation of unnecessary currentGameMatrix copies within every movement method
-    Rotation logic improved to also include wall parameters when rotating
-    Changed initial brick positioning from Y=10 to Y=1 to make brick start at the top of the board
-    Added getNextShape to show the next piece preview in the UI
+    - Removed creation of unnecessary currentGameMatrix copies within every movement method
+    - Rotation logic improved to also include wall parameters when rotating
+    - Changed initial brick positioning from Y=10 to Y=1 to make brick start at the top of the board
+    - Added getNextShape to show the next piece preview in the UI
 * MatrixOperations: Fixed indexing bug in intersect and merge method that caused collision detection issues
-    Improved boundary checking in checkOutOfBound and improved checkRemoving method to initialize new empty rows with zero values
-    Removed unused deepCopyList method to make the code cleaner
+    - Improved boundary checking in checkOutOfBound and improved checkRemoving method to initialize new empty rows with zero values
+    - Removed unused deepCopyList method to make the code cleaner
 
 
 com.comp2042.logic.bricks:
-- RandomBrickGenerator: Updated to work with the new brick system by providing random selection from the centralized shape definitions from the enum class
-- Deleted Classes: BrickRotator, IBrick, JBrick, LBrick, OBrick, SBrick, TBrick, ZBrick
+* RandomBrickGenerator: Updated to work with the new brick system by providing random selection from the centralized shape definitions from the enum class
+* Deleted Classes: BrickRotator, IBrick, JBrick, LBrick, OBrick, SBrick, TBrick, ZBrick
    In order to implement a new Brick system, the seven brick classes were condensed to instead define all bricks in a single BrickShape enum 
     Rotation logic is integrated in BrickOperations, this eliminates the code duplication and improves the hierarchy of the brick system
 
 
 **• Unexpected Problems:** 
 
-- Refactoring complications: 
-    The original GuiController acted as a "god-class" which handled all the UI rendering, input processing, game state management, etc
+* Refactoring complications: 
+    - The original GuiController acted as a "god-class" which handled all the UI rendering, input processing, game state management, etc
     which made the code complicated and difficult to unravel.
-    During my refactor of this controller was challenging due to the tightly coupled codes and excessively long methods with unclear boundaries.
-    The biggest challenge was identifying clean separation points in the code
-    I overcame this by decomposing the class systematically and extracting the functionalities in multiple steps. 
-- Down Movement bug:
-   After the refactor of GuiController there appeared a critical issue when moving the brick down with the user key input
+    - During my refactor of this controller was challenging due to the tightly coupled codes and excessively long methods with unclear boundaries.
+    - The biggest challenge was identifying clean separation points in the code
+    - I overcame this by decomposing the class systematically and extracting the functionalities in multiple steps. 
+* Down Movement bug:
+   - After the refactor of GuiController there appeared a critical issue when moving the brick down with the user key input
    as the brick seemed to skip rows and move twice as fast as intended. This occurred because the automatic and user initiated down movements were being triggered
    simultaneously. 
-   The solution implemented for this issue was to create a separate movement timelines for user and automatic down movement
+   - The solution implemented for this issue was to create a separate movement timelines for user and automatic down movement
    with a faster timeline for the user initiated movement that only activates when the down key is held.
-   This ensures a smoother transition between the movements and an enhanced player experience.
-- Level system implementation issues:
-    The initial level system I designed had fixed levels effects that were only activated once at certain levels and were never revisited after those specific levels had ended
-    This created a system where the levels were infinitely speed levels after the final challenge level was over which made the levels quite static.
-    Along with that, the level effects also posed a lot of complications during the implementation:
-        -Fog overlay caused several issues in the board and UI elements
-        -Static and dynamic obstacles were initially created with brick int value of 3, which caused clearing them to clear any intersected bricks of the same value
-    Solutions implemented:
-        -Created a dedicated value 8 for the obstacles and modified brick handling functions to handle this new value and preserve obstacles when lines clear
-        -Implemented layering renders in order to make the fog appear above the board but below the panels
-    The solution for the static level system was to implement a new system with a modular approach to handling the levels.
-    This included creating thresholds for unlocking certain challenges and creating an infinite challenge level system, which created a smoother difficulty curve
-    To prevent overly difficult challenges, challenge validations were implemented.
+   - This ensures a smoother transition between the movements and an enhanced player experience.
+* Level system implementation issues:
+    - The initial level system I designed had fixed levels effects that were only activated once at certain levels and were never revisited after those specific levels had ended
+    - This created a system where the levels were infinitely speed levels after the final challenge level was over which made the levels quite static.
+    - Along with that, the level effects also posed a lot of complications during the implementation:
+        - Fog overlay caused several issues in the board and UI elements
+        - Static and dynamic obstacles were initially created with brick int value of 3, which caused clearing them to clear any intersected bricks of the same value
+    - Solutions implemented:
+        - Created a dedicated value 8 for the obstacles and modified brick handling functions to handle this new value and preserve obstacles when lines clear
+        - Implemented layering renders in order to make the fog appear above the board but below the panels
+    - The solution for the static level system was to implement a new system with a modular approach to handling the levels.
+    - This included creating thresholds for unlocking certain challenges and creating an infinite challenge level system, which created a smoother difficulty curve
+    - To prevent overly difficult challenges, challenge validations were implemented.

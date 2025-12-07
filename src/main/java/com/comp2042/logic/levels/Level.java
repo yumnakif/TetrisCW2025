@@ -1,12 +1,9 @@
 package com.comp2042.logic.levels;
 
-import com.comp2042.Board;
-import com.comp2042.GuiController;
-import com.comp2042.MoveEvent;
+import com.comp2042.logic.board.Board;
+
 /**
- * Returns the falling speed multiplier and level number.
- * normal speed is 1.0
- * The speed increases according to the level
+ * Defines the functions for game level implementations in the challenge system
  */
 public interface Level {
 
@@ -24,4 +21,8 @@ public interface Level {
     void stopObstacles();
     boolean hasReverseControl();
     boolean isSwapped();
+    void swapKeys();
+    void stopSwapKeys();
+
+
 }

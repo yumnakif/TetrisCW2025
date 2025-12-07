@@ -1,10 +1,11 @@
-package com.comp2042;
+package com.comp2042.ui;
 
-import javafx.beans.property.BooleanProperty;
+import com.comp2042.input.EventSource;
+import com.comp2042.input.EventType;
+import com.comp2042.input.InputEventListener;
+import com.comp2042.logic.board.MoveEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
-import java.util.function.Consumer;
 
 /**
  * Handles keyboard input for the Tetris game controls

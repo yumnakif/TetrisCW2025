@@ -1,11 +1,10 @@
-package com.comp2042;
+package com.comp2042.logic.board;
 
+import com.comp2042.ui.ViewData;
 import com.comp2042.logic.bricks.Brick;
 import com.comp2042.logic.bricks.BrickGenerator;
-import com.comp2042.logic.bricks.BrickOperations;
 import com.comp2042.logic.bricks.RandomBrickGenerator;
 import javafx.geometry.Point2D;
-import java.awt.*;
 
 /**
  * Implementation of the Game board
@@ -49,9 +48,8 @@ public class SimpleBoard implements Board {
      */
     @Override
     public boolean moveBrickDown() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         Point2D p = new Point2D(currentOffset.getX(),currentOffset.getY()+1);
-        boolean conflict = MatrixOperations.intersect(currentMatrix, currentBrick.getCurrentMatrix(), (int) p.getX(), (int) p.getY());
+        boolean conflict = MatrixOperations.intersect(currentGameMatrix, currentBrick.getCurrentMatrix(), (int) p.getX(), (int) p.getY());
         if (conflict) {
             return false;
         } else {
@@ -68,9 +66,8 @@ public class SimpleBoard implements Board {
      */
     @Override
     public boolean moveBrickLeft() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         Point2D p = new Point2D(currentOffset.getX()-1, currentOffset.getY());
-        boolean conflict = MatrixOperations.intersect(currentMatrix, currentBrick.getCurrentMatrix(), (int) p.getX(), (int) p.getY());
+        boolean conflict = MatrixOperations.intersect(currentGameMatrix, currentBrick.getCurrentMatrix(), (int) p.getX(), (int) p.getY());
         if (conflict) {
             return false;
         } else {
@@ -86,9 +83,8 @@ public class SimpleBoard implements Board {
      */
     @Override
     public boolean moveBrickRight() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         Point2D p = new Point2D(currentOffset.getX() +1,currentOffset.getY());
-        boolean conflict = MatrixOperations.intersect(currentMatrix, currentBrick.getCurrentMatrix(), (int) p.getX(), (int) p.getY());
+        boolean conflict = MatrixOperations.intersect(currentGameMatrix, currentBrick.getCurrentMatrix(), (int) p.getX(), (int) p.getY());
         if (conflict) {
             return false;
         } else {
@@ -105,9 +101,8 @@ public class SimpleBoard implements Board {
      */
     @Override
     public boolean rotateBrick() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         currentBrick.rotate();
-        boolean conflict = MatrixOperations.intersect(currentMatrix, currentBrick.getCurrentMatrix(), (int) currentOffset.getX(), (int) currentOffset.getY());
+        boolean conflict = MatrixOperations.intersect(currentGameMatrix, currentBrick.getCurrentMatrix(), (int) currentOffset.getX(), (int) currentOffset.getY());
         if (conflict) {
             currentBrick.reverseRotate();
             return false;
@@ -118,7 +113,6 @@ public class SimpleBoard implements Board {
 
     /**
      Creates a new brick at the top center of the board.
-     *
      * @return {@code true} if the new brick immediately collides (game over),
      *         {@code false} if the brick can be placed
      */
@@ -167,7 +161,6 @@ public class SimpleBoard implements Board {
         ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
         currentGameMatrix = clearRow.getNewMatrix();
         return clearRow;
-
     }
 
     /**

@@ -1,5 +1,7 @@
-package com.comp2042;
+package com.comp2042.logic.board;
 
+
+import com.comp2042.ui.ViewData;
 
 /**
  * Represents the game board interface for the tetris game

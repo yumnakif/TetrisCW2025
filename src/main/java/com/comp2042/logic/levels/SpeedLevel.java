@@ -1,7 +1,6 @@
 package com.comp2042.logic.levels;
 
-import com.comp2042.Board;
-import com.comp2042.MoveEvent;
+import com.comp2042.logic.board.Board;
 
 
 /**
@@ -113,7 +112,7 @@ public class SpeedLevel implements Level{
     }
 
     /**
-     * Indicates whether this level includes reversed controls
+     * Placeholder method to indicate whether this level includes reversed controls
      * @return false
      */
     @Override
@@ -129,5 +128,19 @@ public class SpeedLevel implements Level{
     public boolean isSwapped() {
         return false;
     }
+
+    /**
+     * Swaps key functions for reverse control levels
+     */
+    @Override
+    public void swapKeys(){
+    }
+
+    /**
+     * Stop the control swapping timeline and reset to normal controls
+     */
+    @Override
+    public void stopSwapKeys(){
+}
 
 }

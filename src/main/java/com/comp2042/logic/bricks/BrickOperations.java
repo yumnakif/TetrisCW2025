@@ -1,6 +1,5 @@
 package com.comp2042.logic.bricks;
 
-import com.comp2042.MatrixOperations;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;

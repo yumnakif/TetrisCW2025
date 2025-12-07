@@ -1,8 +1,11 @@
-package com.comp2042;
+package com.comp2042.controller;
 
+import com.comp2042.logic.board.*;
+import com.comp2042.input.EventSource;
+import com.comp2042.input.InputEventListener;
 import com.comp2042.logic.levels.Level;
-import com.comp2042.logic.levels.Level4;
-import com.comp2042.logic.levels.LevelManager;
+import com.comp2042.logic.levels.LevelController;
+import com.comp2042.ui.ViewData;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Label;
@@ -20,7 +23,7 @@ public class GameController implements InputEventListener {
     private IntegerProperty linesProperty=new SimpleIntegerProperty(0);
     private Board board = new SimpleBoard(height, width);
     private final GuiController viewGuiController;
-    private LevelManager levelManager=new LevelManager();
+    private LevelController levelController =new LevelController();
 
     /**
      * Create a new game controller with specified GUI controller
@@ -35,7 +38,7 @@ public class GameController implements InputEventListener {
         viewGuiController.getRenderer().initBrick(board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
         viewGuiController.bindLinesRemoved(linesProperty);
-        viewGuiController.bindLevel(levelManager.getLevelProperty());
+        viewGuiController.bindLevel(levelController.getLevelProperty());
         viewGuiController.getRenderer().updateNextShape(board.getNextShape());
         viewGuiController.newGame(null);
     }
@@ -48,8 +51,8 @@ public class GameController implements InputEventListener {
     @Override
     public DownData onDownEvent(MoveEvent event) {
 
-        if(event.getEventSource()==EventSource.THREAD && levelManager.getCurrentLevel().hasWind()){
-            boolean wind=levelManager.getCurrentLevel().applyWind(board);
+        if(event.getEventSource()== EventSource.THREAD && levelController.getCurrentLevel().hasWind()){
+            boolean wind= levelController.getCurrentLevel().applyWind(board);
             if(wind){
                 ViewData viewData=board.getViewData();
                 viewGuiController.brickRender(viewData);
@@ -91,7 +94,7 @@ public class GameController implements InputEventListener {
      */
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
-        if(levelManager.getCurrentLevel().hasReverseControl()&&levelManager.getCurrentLevel().isSwapped()){
+        if(levelController.getCurrentLevel().hasReverseControl()&& levelController.getCurrentLevel().isSwapped()){
             board.moveBrickRight();
         }
         else {
@@ -109,7 +112,7 @@ public class GameController implements InputEventListener {
      */
     @Override
     public ViewData onRightEvent(MoveEvent event) {
-        if(levelManager.getCurrentLevel().hasReverseControl()&&levelManager.getCurrentLevel().isSwapped()){
+        if(levelController.getCurrentLevel().hasReverseControl()&& levelController.getCurrentLevel().isSwapped()){
             board.moveBrickLeft();
         }else {
             board.moveBrickRight();
@@ -185,10 +188,10 @@ public class GameController implements InputEventListener {
 
     /**
      * Updated the brick speed based on the current level multiplier
+     * If new speed is below 50 the default is set to 50 to prevent unplayable speed
      */
     private void updateSpeed(){
-        //update the new calculated speed according to level to GuiController to update the timeline
-        int newSpeed=(int) (fallSpeed/levelManager.getCurrentLevel().getSpeedMultiplier());
+        int newSpeed=(int) (fallSpeed/ levelController.getCurrentLevel().getSpeedMultiplier());
         if(newSpeed<50){
             newSpeed=50;
         }
@@ -208,14 +211,13 @@ public class GameController implements InputEventListener {
      * Level increases every 5 lines cleared
      */
     private void checkLevelup() {
-        //increase level every 5 lines cleared
         int expLevel=totalLines/5 +1;
-        if(expLevel>levelManager.getCurrentLevel().getLevelNumber()){
-            while(expLevel>levelManager.getCurrentLevel().getLevelNumber()){
-                Label levelLabel=new Label("Next Level: "+levelManager.getCurrentLevel().getLevelNumber());
+        if(expLevel> levelController.getCurrentLevel().getLevelNumber()){
+            while(expLevel> levelController.getCurrentLevel().getLevelNumber()){
+                Label levelLabel=new Label("Level: "+ levelController.getCurrentLevel().getLevelNumber());
                 levelLabel.setStyle("-fx-font-size:20; -fx-text-fill: gold;");
 
-                levelManager.nextLevel();
+                levelController.nextLevel();
             }
             updateSpeed();
             applyLevelFunction();
@@ -227,31 +229,38 @@ public class GameController implements InputEventListener {
      * Handles the static and dynamic obstacles, fog, controls swap, etc
      */
     private void applyLevelFunction(){
-        Level level=levelManager.getCurrentLevel();
-        Level previousLevel=levelManager.getPreviousLevel();
+        Level level= levelController.getCurrentLevel();
+        Level previousLevel= levelController.getPreviousLevel();
 
         if(previousLevel!=null && previousLevel.hasStaticObstacles() && !level.hasStaticObstacles()){
-            int[][] matrix=board.getBoardMatrix();
-            for(int i=0;i< matrix.length;i++){
-                for(int j=0;j<matrix[i].length;j++) {
-                    if (matrix[i][j] == 8) {
-                        matrix[i][j] = 0;
-                    }
-                }
-            }
+            removeObstacles(board.getBoardMatrix());
         }
         if(level.hasStaticObstacles()){
             level.placeStaticObject(board);
         }
+
         if(level.hasDynamicObstacles()){
             level.startDynamicObstacles(board);
+        } else{
+            level.stopObstacles();
         }
-        if(level.hasReverseControl()){
-            level.startDynamicObstacles(board);
-        }
-        viewGuiController.applyfog(level.hasFog());
 
+        if(level.hasReverseControl()){
+            level.swapKeys();
+        }
+
+        viewGuiController.applyfog(level.hasFog());
         viewGuiController.getRenderer().refreshBackground(board.getBoardMatrix());
+    }
+
+    private void removeObstacles(int[][] boardMatrix) {
+        for(int i=0;i< boardMatrix.length;i++){
+            for(int j=0;j<boardMatrix[i].length;j++) {
+                if (boardMatrix[i][j] == 8) {
+                    boardMatrix[i][j] = 0;
+                }
+            }
+        }
     }
 
     /**
@@ -261,7 +270,7 @@ public class GameController implements InputEventListener {
     public void createNewGame() {
         totalLines=0;
         linesProperty.set(0);
-        levelManager.reset();
+        levelController.reset();
         board.newGame();
         viewGuiController.getRenderer().clearBoard();
         viewGuiController.getRenderer().initGameView(board.getBoardMatrix());

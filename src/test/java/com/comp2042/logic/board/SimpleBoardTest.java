@@ -1,9 +1,7 @@
-package com.comp2042;
+package com.comp2042.logic.board;
 
 import javafx.geometry.Point2D;
 import org.junit.jupiter.api.Test;
-
-import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

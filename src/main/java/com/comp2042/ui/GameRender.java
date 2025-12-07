@@ -1,5 +1,6 @@
-package com.comp2042;
+package com.comp2042.ui;
 
+import com.comp2042.logic.board.NextShapeInfo;
 import com.comp2042.logic.bricks.BrickShape;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;

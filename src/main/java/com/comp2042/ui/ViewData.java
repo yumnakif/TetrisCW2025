@@ -1,7 +1,7 @@
-package com.comp2042;
+package com.comp2042.ui;
 
+import com.comp2042.logic.board.MatrixOperations;
 import com.comp2042.logic.bricks.Brick;
-import com.comp2042.logic.bricks.BrickOperations;
 
 /**
  * Returns the brick data and its coordinates

@@ -1,35 +1,31 @@
-package com.comp2042;
+package com.comp2042.controller;
 
-import com.comp2042.logic.bricks.BrickShape;
-import com.sun.javafx.charts.Legend;
+import com.comp2042.logic.board.*;
+import com.comp2042.input.EventSource;
+import com.comp2042.input.EventType;
+import com.comp2042.input.InputEventListener;
+import com.comp2042.logic.modes.TimedMode;
+import com.comp2042.ui.*;
 import javafx.animation.*;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -37,7 +33,6 @@ import java.util.ResourceBundle;
  * Main JavaFX controller for Tetris game GUI.
  * Manages game visualization, user input, timing, and game state transitions.
  */
-
 public class GuiController implements Initializable {
 
     @FXML
@@ -68,35 +63,24 @@ public class GuiController implements Initializable {
     private Button pauseButton;
     @FXML
     private StackPane stackroot;
-
     @FXML
     private Label highScoreLabel;
 
     private Timeline timeLine;
-
     private Timeline downTimeline;
-
     private boolean downKeyPressed;
-
     private InputEventListener eventListener;
-
     private Stopwatch stopwatch;
-
     private final BooleanProperty isPause = new SimpleBooleanProperty();
-
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
-
     private static MenuScreen menuScreen;
-
     private boolean isTimedMode=false;
-
     private TimedMode timedMode;
-
     private GameRender renderer;
     private InputHandler inputHandler;
     private GameState state;
-
     Rectangle fogOverlay;
+
     /**
      * Initializes the GUI components and sets up game systems
      * @param location The location used to resolve relative paths
@@ -136,32 +120,6 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * Set up one timeline for automatic brick movement and one for the movement from user key input
-     * Using a timeline for user key movement down for smoother dropping of the brick
-     */
-    private void setupTimeline(){
-        timeLine = new Timeline(new KeyFrame(Duration.millis(300),
-                ae -> {
-                    if(!downKeyPressed){
-                        moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
-                    }
-                }
-        ));
-        timeLine.setCycleCount(Timeline.INDEFINITE);
-
-        downTimeline=new Timeline(new KeyFrame(Duration.millis(50),
-                ae-> {
-                        if(downKeyPressed) {
-                            moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
-                        }else{
-                            downTimeline.stop();
-                        }
-        }
-        ));
-        downTimeline.setCycleCount(Timeline.INDEFINITE);
-        timeLine.play();
-    }
-    /**
      * Initializes input handlers for keyboard controls
      */
     public void initInputHandler(){
@@ -186,6 +144,33 @@ public class GuiController implements Initializable {
     }
 
     /**
+     * Set up one timeline for automatic brick movement and one for the movement from user key input
+     * Using a timeline for user key movement down for smoother dropping of the brick
+     */
+    private void setupTimeline(){
+        timeLine = new Timeline(new KeyFrame(Duration.millis(300),
+                ae -> {
+                    if(!downKeyPressed){
+                        moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                    }
+                }
+        ));
+        timeLine.setCycleCount(Timeline.INDEFINITE);
+
+        downTimeline=new Timeline(new KeyFrame(Duration.millis(50),
+                ae-> {
+                    if(downKeyPressed) {
+                        moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
+                    }else{
+                        downTimeline.stop();
+                    }
+        }
+        ));
+        downTimeline.setCycleCount(Timeline.INDEFINITE);
+        timeLine.play();
+    }
+
+    /**
      * Updates game speed based on level progression
      * @param newSpeed New millisecond delay between automatic moves
      */
@@ -198,7 +183,6 @@ public class GuiController implements Initializable {
         }));
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
-
     }
 
     /**
@@ -220,45 +204,28 @@ public class GuiController implements Initializable {
             renderer.refreshGhost(brick,board);
         }
     }
+
+    /**
+     * Instantly drops the brick to the bottom of the board to where it places
+     * Awards score bonus if lines are cleared
+     */
     public void hardDrop(){
         if(isPause.getValue()==Boolean.FALSE && isGameOver.getValue()==Boolean.FALSE){
             DownData result=eventListener.onHardDropEvent(new MoveEvent(EventType.HARD_DROP,EventSource.USER));
-            if (result.getClearRow() != null && result.getClearRow().getLinesRemoved() > 0) {
-                if(result.getClearRow().getLinesRemoved()>1){
-                    NotificationPanel notificationPanel = new NotificationPanel("COMBO! +" + result.getClearRow().getScoreBonus());
-                    groupNotification.getChildren().add(notificationPanel);
-                    notificationPanel.showScore(groupNotification.getChildren());
-                }
-                else{
-                NotificationPanel notificationPanel = new NotificationPanel("+" + result.getClearRow().getScoreBonus());
-                groupNotification.getChildren().add(notificationPanel);
-                notificationPanel.showScore(groupNotification.getChildren());
-                }
-            }
+            setScoreNotification(result);
             brickRender(result.getViewData());
-
         }
     }
 
     /**
-     * Moves the current brick down one cell manual or automatic
+     * Moves the current brick down one cell manually or automatic
+     * Awards score bonus if lines are cleared
      * @param event MoveEvent describing the move action
      */
     private void moveDown(MoveEvent event) {
         if (isPause.getValue() == Boolean.FALSE && eventListener!=null) {
             DownData downData = eventListener.onDownEvent(event);
-            if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
-                if(downData.getClearRow().getLinesRemoved()>1){
-                    NotificationPanel notificationPanel = new NotificationPanel("COMBO! +" + downData.getClearRow().getScoreBonus());
-                    groupNotification.getChildren().add(notificationPanel);
-                    notificationPanel.showScore(groupNotification.getChildren());
-                }
-                else {
-                    NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
-                    groupNotification.getChildren().add(notificationPanel);
-                    notificationPanel.showScore(groupNotification.getChildren());
-                }
-            }
+            setScoreNotification(downData);
             if(downData!=null && downData.getViewData()!=null) {
                 brickRender(downData.getViewData());
                 renderer.updateNextShape(eventListener.getNextShape());
@@ -268,6 +235,28 @@ public class GuiController implements Initializable {
     }
 
     /**
+     * Displays the notification for the score bonus received from clearing lines
+     * after moving the brick down or hard drop actions
+     * @param downData DownData object containing information about the line clearing operation, the number of lines cleared
+     *                 and the score bonus achieved
+     */
+    private void setScoreNotification(DownData downData) {
+        if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
+            if(downData.getClearRow().getLinesRemoved()>1){
+                NotificationPanel notificationPanel = new NotificationPanel("COMBO! +" + downData.getClearRow().getScoreBonus());
+                groupNotification.getChildren().add(notificationPanel);
+                notificationPanel.showScore(groupNotification.getChildren());
+            }
+            else{
+            NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+            groupNotification.getChildren().add(notificationPanel);
+            notificationPanel.showScore(groupNotification.getChildren());
+            }
+        }
+    }
+
+
+    /**
      * Sets the input event listener for game logic.
      * @param eventListener InputEventListener to handle game events
      */
@@ -275,6 +264,13 @@ public class GuiController implements Initializable {
         this.eventListener = eventListener;
     }
 
+    /**
+     * Enables or disables the timed game mode
+     * If timed mode is enabled the countdown timer is started
+     * Game over panel shown when timer ends
+     * @param istimedMode {@code true} enables the timed mode
+     *                    {@code false} disables the timed mode and timer UI is hidden
+     */
     public void setTimedMode(boolean istimedMode) {
         isTimedMode = istimedMode;
         if(istimedMode){
@@ -287,9 +283,8 @@ public class GuiController implements Initializable {
             timedMode.bindTimer(timerLabel);
 
             timedMode.setOnGameEnd(()->{
-                Platform.runLater(()->{
-                    gameOver();
-                });
+
+                Platform.runLater(this::gameOver);
             });
         } else{
             timerBox.setVisible(false);
@@ -301,13 +296,13 @@ public class GuiController implements Initializable {
      * Binds score display to game score property.
      * @param integerProperty Property containing current score
      */
-
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("%d"));
         integerProperty.addListener((obs, oldVal, newVal) -> {
             state.getScore().add(newVal.intValue() - oldVal.intValue());
         });
     }
+
     /**
      * Binds lines removed display to game property
      * @param linesProperty Property containing lines cleared count
@@ -364,9 +359,8 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * restarts game with fresh state
+     * Restarts game with fresh state
      */
-
     public void restartGame(){
         if(timeLine!=null){
             timeLine.stop();
@@ -401,6 +395,7 @@ public class GuiController implements Initializable {
         }
 
     }
+
     /**
      * Handles game over condition and displays game over screen
      * Stops the timeline and stopwatch calls the GameState to show game over panel
@@ -410,11 +405,14 @@ public class GuiController implements Initializable {
         timeLine.stop();
         if(isTimedMode && timedMode!=null){
             timedMode.stop();
+            String elapsedTime= timerLabel.getText();
+            state.setElapsedTime(elapsedTime);
         }else {
             stopwatch.stop();
+            String elapsedTime=stopwatchLabel.getText();
+            state.setElapsedTime(elapsedTime);
         }
-        String elapsedTime=stopwatchLabel.getText();
-        state.setElapsedTime(elapsedTime);
+
         state.showGameOver();
     }
 
@@ -436,7 +434,9 @@ public class GuiController implements Initializable {
      * @param actionEvent button click event from new game button
      */
     public void newGame(ActionEvent actionEvent) {
-        if(timeLine!=null){timeLine.stop();}
+        if(timeLine!=null){
+            timeLine.stop();
+        }
         eventListener.createNewGame();
         gamePanel.requestFocus();
 

@@ -1,5 +1,6 @@
-package com.comp2042;
+package com.comp2042.ui;
 
+import com.comp2042.logic.board.Score;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
@@ -28,14 +29,6 @@ public class GameState {
         gameoverPanel.setScore(score);
         pausePanel.hide();
         gameoverPanel.hide();
-    }
-
-    /**
-     * Gets the current game score
-     * @return the score object tracking game points
-     */
-    public Score getScore(){
-        return score;
     }
 
     /**
@@ -79,6 +72,13 @@ public class GameState {
     }
 
     /**
+     * Hide pause menu
+     */
+    public void hidePause(){
+        pausePanel.hide();
+    }
+
+    /**
      * Sets the restart action for the game over panel
      * @param run Runnable to execute when new game button is clicked from game over
      */
@@ -116,11 +116,13 @@ public class GameState {
         gameoverPanel.setElapsedTime(elapsedTime);
     }
 
+
     /**
-     * Hide pause menu
+     * Gets the current game score
+     * @return the score object tracking game points
      */
-    public void hidePause(){
-        pausePanel.hide();
+    public Score getScore(){
+        return score;
     }
 
     /**

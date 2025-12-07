@@ -17,7 +17,6 @@ public enum BrickShape {
             {0, 0, 0, 0},
             {2, 2, 2, 0},
             {0, 0, 2, 0},
-
             {0, 0, 0, 0}
     }),
     L( Color.CHARTREUSE,3,new int[][]{

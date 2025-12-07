@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.input;
 
 /**
  * Enum representing the source of a game event

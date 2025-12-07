@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.logic.board;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -133,14 +133,5 @@ public class MatrixOperations {
         }
         int scoreBonus = 50 * clearedRows.size() * clearedRows.size();
         return new ClearRow(clearedRows.size(), tmp, scoreBonus);
-    }
-
-    /**
-     * Creates a deep copy of a list of matrices
-     * @param list list of matrices to copy
-     * @return new list with independent copies of all matrices
-     */
-    public static List<int[][]> deepCopyList(List<int[][]> list){
-        return list.stream().map(MatrixOperations::copy).collect(Collectors.toList());
     }
 }

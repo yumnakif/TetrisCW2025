@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.ui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -8,14 +8,21 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+/**
+ * Animated panel for displaying the score bonuses and notification when lines are cleared
+ * Shows the points received for line clears with combo message when multiple lines are cleared
+ */
 public class NotificationPanel extends BorderPane {
 
+    /**
+     * Creates notification with the specified text
+     * @param text Message to display
+     */
     public NotificationPanel(String text) {
         setMinSize(220,200);
 
@@ -27,6 +34,10 @@ public class NotificationPanel extends BorderPane {
 
     }
 
+    /**
+     * Animates notification with fade in and out transitions
+     * @param list ObservableList to remove the panel from after animation is done
+     */
     public void showScore(ObservableList<Node> list) {
         FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
         ft.setFromValue(1);

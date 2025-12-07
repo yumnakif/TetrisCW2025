@@ -1,5 +1,8 @@
 package com.comp2042;
 
+import com.comp2042.controller.GameController;
+import com.comp2042.controller.GuiController;
+import com.comp2042.ui.MenuScreen;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -73,6 +76,10 @@ public class Main extends Application {
     }
 
 
+    /**
+     * Loads the timed mode game when the Timed Mode button is clicked from main menu
+     * @param primaryStage the stage to display the game scene on
+     */
     public void startTimedGame(Stage primaryStage){
         try{
             URL location = Main.class.getClassLoader().getResource("gameLayout.fxml");
